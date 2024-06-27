@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from 'axios'
 import {toast} from 'react-hot-toast'
 import { useNavigate } from "react-router-dom"
+import './Register.css';
 
 export default function Register() {
     const navigate = useNavigate();

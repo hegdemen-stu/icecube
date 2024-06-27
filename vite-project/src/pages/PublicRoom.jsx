@@ -3,7 +3,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import OneLove from '../assets/Onelove.mp3';
-import Attention from '../assets/Attention.mp3'; // Updated path
+import Attention from '../assets/Attention.mp3';
+import './PublicRoom.css'; // Updated path
 
 const songs = [
   { name: 'One Love', url: OneLove },
@@ -88,3 +89,4 @@ const PublicRoom = () => {
 };
 
 export default PublicRoom;
+

@@ -25,12 +25,25 @@
 .bg2 {
     position: absolute;
     bottom: -10%; /* Move it more to the bottom */
-    right: -50%; /* Move it more to the left */
-    width: 100%; /* Adjust the size of the background image */
+    right: -33%; /* Move it more to the left */
+    width: 65%; /* Adjust the size of the background image */
     height: auto;
     opacity: 0.7; /* Maintain aspect ratio */
 }
 
+.bg2 {
+    animation: spin 10s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
 .content_text {
     position: relative;
     z-index: 2; /* Ensure content is above background layers */
