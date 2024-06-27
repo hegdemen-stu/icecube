@@ -16,7 +16,7 @@ export default function Home() {
         <div className="sub-text">Jam Out, Share Tunes, Let Music Connect Us!</div>
         <div className="button_container_home">
           <button className="button_private">Private Room</button>
-          <Link to="/public-room">
+          <Link to="/PublicRoom">
             <button className="button_public">Public Room</button>
           </Link>
         </div>
