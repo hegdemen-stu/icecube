@@ -1,3 +1,3 @@
 <b>icecube<b>
 
-Music social media platform
+Music social media platform.
