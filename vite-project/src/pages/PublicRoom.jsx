@@ -1,4 +1,5 @@
 // npm install react-icons
+// npm i use-sound
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import OneLove from '../assets/Onelove.mp3';
