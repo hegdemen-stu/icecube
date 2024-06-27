@@ -1,0 +1,62 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 15px;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    max-width: 1200px;
+    z-index: 1000;
+    margin-top: 10px;
+}
+  
+.logo-link {
+    text-decoration: none; /* Remove underline from logo link */
+}
+  
+.icecube {
+    height: 55px; /* Reduced height */
+    width: auto; /* Automatically adjust width */
+    margin-right: 10px;
+}
+  
+.nav-link {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.1rem;
+}
+  
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    padding: 10px; /* Add padding to the glass morphic container */
+    border-radius: 20px; /* Optional: Add border radius for a softer edge */
+}
+  
+.nav-button {
+    padding: 8px 16px;
+    margin-left: 10px;
+    background-color: #2d3033;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-weight: 300;
+}
+  
+.nav-button:hover {
+    background-color: #44484c;
+}
+  
+.glass_morphic {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px; /* Optional: Add border radius for a softer edge */
+    border: 0px solid rgba(255, 255, 255, 0.2);
+    padding: 5px; /* Optional: Add a border to enhance the glass effect */
+}

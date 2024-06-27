@@ -1,11 +1,27 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import logo from './icecube.png'; // Import the image from the correct relative path
+import './navbar.css'; // Import the CSS file
 
-export default function Navbar() {
+const Navbar = () => {
   return (
-    <nav>
-        <Link to='/'>Home</Link>
-        <Link to='/Register'>Register</Link>
-        <Link to='/Login'>Login</Link>
-    </nav> 
-  )
-}
+    <nav className="navbar">
+      
+      <Link to="/" className="logo-link">
+        <img src={logo} alt="Home" className="icecube" />
+      </Link>
+      
+      <div className="glass_morphic">
+      <div className="nav-buttons">
+        <Link to="/Register" className="nav-link">
+          <button className="nav-button">Register</button>
+        </Link>
+        <Link to="/Login" className="nav-link">
+          <button className="nav-button">Login</button>
+        </Link>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
