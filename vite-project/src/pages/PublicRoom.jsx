@@ -1,9 +1,10 @@
-// npm install react-icons
+// src/pages/PublicRoom.js
 // npm i use-sound
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import OneLove from '../assets/Onelove.mp3';
 import Attention from '../assets/Attention.mp3';
+import MusicGenres from '../components/MusicGenres';
 import './PublicRoom.css'; // Updated path
 
 const songs = [
@@ -84,9 +85,10 @@ const PublicRoom = () => {
       </button>
       <button onClick={playNextSong}><FaStepForward /></button> {/* Next */}
       <button onClick={handleOtherOptions}><FaCog /></button> {/* Other Options */}
+
+      <MusicGenres /> {/* Add the MusicGenres component here */}
     </div>
   );
 };
 
 export default PublicRoom;
-
