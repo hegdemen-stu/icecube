@@ -1,25 +1,31 @@
-// src/pages/PublicRoom.js
-// npm i use-sound
+// src/pages/PublicRoom.jsx
+// npm install react-icons
+// npm install use-sound3
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import OneLove from '../assets/Onelove.mp3';
 import Attention from '../assets/Attention.mp3';
-import MusicGenres from '../components/MusicGenres';
-import './PublicRoom.css'; // Updated path
+import './PublicRoom.css';
+import MusicGenres from './MusicGenres'; // Ensure this path is correct
 
-const songs = [
-  { name: 'One Love', url: OneLove },
-  { name: 'Attention', url: Attention },
-  // Add more songs as needed
-];
+const genres = {
+  POP: [{ name: 'One Love', url: OneLove }],
+  Rock: [{ name: 'Attention', url: Attention }],
+  Melody: [],
+  LoFi: [],
+  Jazz: [],
+};
 
 const PublicRoom = () => {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentGenre, setCurrentGenre] = useState('POP');
   const audioRef = useRef(null);
 
+  const songs = genres[currentGenre] || [];
+
   const togglePlayPause = () => {
-    if (!isPlaying) {
+    if (!isPlaying && songs[currentSongIndex]) {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
@@ -28,15 +34,19 @@ const PublicRoom = () => {
   };
 
   const playNextSong = () => {
-    const nextIndex = (currentSongIndex + 1) % songs.length;
-    setCurrentSongIndex(nextIndex);
-    setIsPlaying(true); // Ensure the next song starts playing automatically
+    if (songs.length > 0) {
+      const nextIndex = (currentSongIndex + 1) % songs.length;
+      setCurrentSongIndex(nextIndex);
+      setIsPlaying(true);
+    }
   };
 
   const playPreviousSong = () => {
-    const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-    setCurrentSongIndex(prevIndex);
-    setIsPlaying(true); // Ensure the previous song starts playing automatically
+    if (songs.length > 0) {
+      const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+      setCurrentSongIndex(prevIndex);
+      setIsPlaying(true);
+    }
   };
 
   const handleOtherOptions = () => {
@@ -45,7 +55,7 @@ const PublicRoom = () => {
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (audio) {
+    if (audio && songs.length > 0) {
       if (isPlaying) {
         audio.play();
       } else {
@@ -61,32 +71,31 @@ const PublicRoom = () => {
         audio.removeEventListener('ended', handleEnded);
       };
     }
-  }, [currentSongIndex, isPlaying]);
+  }, [currentSongIndex, isPlaying, songs]);
 
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && songs.length > 0) {
       audioRef.current.play();
     }
-  }, [currentSongIndex]);
+  }, [currentSongIndex, songs]);
 
   useEffect(() => {
-    console.log(`Current song: ${songs[currentSongIndex].name}`);
+    console.log(`Current song: ${songs[currentSongIndex]?.name}`);
     console.log(`Is playing: ${isPlaying}`);
-  }, [currentSongIndex, isPlaying]);
+  }, [currentSongIndex, isPlaying, songs]);
 
   return (
     <div>
       <h2>PublicRoom Music Player</h2>
-      <div>Now Playing: {songs[currentSongIndex].name}</div>
-      <audio ref={audioRef} src={songs[currentSongIndex].url} />
-      <button onClick={playPreviousSong}><FaStepBackward /></button> {/* Previous */}
+      <div>Now Playing: {songs[currentSongIndex]?.name || 'No song available'}</div>
+      <audio ref={audioRef} src={songs[currentSongIndex]?.url} />
+      <button onClick={playPreviousSong}><FaStepBackward /></button>
       <button onClick={togglePlayPause}>
-        {isPlaying ? <FaPause /> : <FaPlay />} {/* Play/Pause */}
+        {isPlaying ? <FaPause /> : <FaPlay />}
       </button>
-      <button onClick={playNextSong}><FaStepForward /></button> {/* Next */}
-      <button onClick={handleOtherOptions}><FaCog /></button> {/* Other Options */}
-
-      <MusicGenres /> {/* Add the MusicGenres component here */}
+      <button onClick={playNextSong}><FaStepForward /></button>
+      <button onClick={handleOtherOptions}><FaCog /></button>
+      <MusicGenres setCurrentGenre={setCurrentGenre} />
     </div>
   );
 };
