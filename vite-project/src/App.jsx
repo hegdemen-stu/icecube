@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import PublicRoom from './pages/PublicRoom';
 import PrivateRoom from './pages/PrivateRoom'; // Import PrivateRoom
 import Navbar from './components/navbar';
-import ChatPublic from './pages/ChatPublic';
+
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 
@@ -55,7 +55,7 @@ function App() {
                 <Route path='/Login' element={<Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />} />
                 <Route path='/PublicRoom' element={<PublicRoom />} />
                 <Route path='/PrivateRoom' element={<PrivateRoom />} /> {/* Add PrivateRoom route */}
-                <Route path='/ChatPublic' element={<ChatPublic />} />
+                
             </Routes>
         </>
     );
