@@ -1,6 +1,3 @@
-// src/pages/PublicRoom.jsx
-// npm install react-icons
-// npm install use-sound3
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import OneLove from '../assets/Onelove.mp3';
@@ -20,6 +17,8 @@ const PublicRoom = () => {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentGenre, setCurrentGenre] = useState('POP');
+  const [volume, setVolume] = useState(0.5); // Volume state
+  const [showSettings, setShowSettings] = useState(false); // Settings visibility state
   const audioRef = useRef(null);
 
   const songs = genres[currentGenre] || [];
@@ -49,13 +48,14 @@ const PublicRoom = () => {
     }
   };
 
-  const handleOtherOptions = () => {
-    console.log('Other options functionality to be implemented');
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
   };
 
   useEffect(() => {
     const audio = audioRef.current;
     if (audio && songs.length > 0) {
+      audio.volume = volume;
       if (isPlaying) {
         audio.play();
       } else {
@@ -71,7 +71,7 @@ const PublicRoom = () => {
         audio.removeEventListener('ended', handleEnded);
       };
     }
-  }, [currentSongIndex, isPlaying, songs]);
+  }, [currentSongIndex, isPlaying, songs, volume]);
 
   useEffect(() => {
     if (isPlaying && songs.length > 0) {
@@ -94,7 +94,23 @@ const PublicRoom = () => {
         {isPlaying ? <FaPause /> : <FaPlay />}
       </button>
       <button onClick={playNextSong}><FaStepForward /></button>
-      <button onClick={handleOtherOptions}><FaCog /></button>
+      <button onClick={toggleSettings}><FaCog /></button>
+      {showSettings && (
+        <div className="settings">
+          <h3>Settings</h3>
+          <label>
+            Volume:
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(e) => setVolume(e.target.value)}
+            />
+          </label>
+        </div>
+      )}
       <MusicGenres setCurrentGenre={setCurrentGenre} />
     </div>
   );
