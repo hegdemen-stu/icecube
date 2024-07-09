@@ -1,13 +1,11 @@
-// npm install react-modal
-// npm i use-sound
-// npm install react-icons
-
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import Modal from 'react-modal';
+import { Carousel } from 'react-responsive-carousel'; // Import Carousel component
 import OneLove from '../assets/Onelove.mp3';
 import Attention from '../assets/Attention.mp3';
 import './PublicRoom.css';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import carousel styles
 
 const genres = {
   POP: [{ name: 'One Love', url: OneLove }],
@@ -96,8 +94,20 @@ const PublicRoom = () => {
   return (
     <div className="page-body">
       <div className="container">
-        <div className="sidebar-empty-space"></div>
         <div className="main-content">
+          <div className="carousel-container">
+            <Carousel showThumbs={false}>
+              <div>
+                <img src="/path/to/your/image1.jpg" alt="Carousel Image 1" />
+              </div>
+              <div>
+                <img src="/path/to/your/image2.jpg" alt="Carousel Image 2" />
+              </div>
+              <div>
+                <img src="/path/to/your/image3.jpg" alt="Carousel Image 3" />
+              </div>
+            </Carousel>
+          </div>
           <div className="top-content">
             <div className="room-container">
               <h2 className="room-header">PublicRoom Music Player</h2>
@@ -111,30 +121,20 @@ const PublicRoom = () => {
                 <button className="control-button" onClick={playNextSong}><FaStepForward /></button>
                 <button className="control-button" onClick={handleOtherOptions}><FaCog /></button>
               </div>
-              <div className="genres-wrapper">
-                {Object.keys(genres).map((genre) => (
-                  <button
-                    key={genre}
-                    className={`genre-button ${currentGenre === genre ? 'bg-green-600' : ''}`}
-                    onClick={() => setCurrentGenre(genre)}
-                  >
-                    {genre}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
-          <div className="music-library">
-            <h2 className="music-library-header">Your Library</h2>
-            {songs.map((song, index) => (
-              <div
-                key={index}
-                className="music-item"
-                onClick={() => setCurrentSongIndex(index)}
+        </div>
+        <div className="genres-sidebar">
+          <h2 className="genres-header">Genres</h2>
+          <div className="genres-list">
+            {Object.keys(genres).map((genre) => (
+              <button
+                key={genre}
+                className={`genre-button ${currentGenre === genre ? 'bg-green-600' : ''}`}
+                onClick={() => setCurrentGenre(genre)}
               >
-                <div className="music-item-name">{song.name}</div>
-                <div className="music-item-info">{/* Add any additional info here */}</div>
-              </div>
+                {genre}
+              </button>
             ))}
           </div>
         </div>

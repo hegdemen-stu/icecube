@@ -1,166 +1,189 @@
-/* PublicRoom.css */
-
 .page-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #1c1c1c;
-    font-family: 'Roboto', sans-serif;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: row;
-    width: 90%;
-    max-width: 1400px;
-    background-color: #2c2c2c;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #2e2e2e;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .sidebar-header {
-    font-size: 24px;
-    color: #ffffff;
-    margin-bottom: 20px;
-  }
-  
-  .sidebar-item {
-    color: #b3b3b3;
-    font-size: 18px;
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
-  
-  .sidebar-item:hover {
-    color: #ffffff;
-  }
-  
-  .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    overflow: auto;
-  }
-  
-  .top-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .room-container {
-    background-color: #2c2c2c;
-    padding: 20px;
-    border-radius: 10px;
-    width: 100%;
-  }
-  
-  .room-header {
-    font-size: 28px;
-    color: #ffffff;
-    margin-bottom: 20px;
-  }
-  
-  .current-playing {
-    font-size: 20px;
-    color: #b3b3b3;
-    margin-bottom: 10px;
-  }
-  
-  .controls-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .control-button {
-    background-color: #4f4d4d;
-    border: none;
-    padding: 15px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 20px;
-    color: #ffffff;
-    transition: background-color 0.3s;
-  }
-  
-  .control-button:hover {
-    background-color: #484343;
-  }
-  
-  .genres-wrapper {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  
-  .genre-button {
-    background-color: #dcdcdc;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    font-size: 16px;
-    border: none;
-    text-align: center;
-  }
-  
-  .genre-button:hover {
-    background-color: #c0c0c0;
-    transform: scale(1.05);
-  }
-  
-  .music-library {
-    background-color: #3c3c3c;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .music-library-header {
-    font-size: 24px;
-    color: #ffffff;
-    margin-bottom: 20px;
-  }
-  
-  .music-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #4c4c4c;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .music-item:hover {
-    background-color: #5c5c5c;
-  }
-  
-  .music-item-name {
-    color: #ffffff;
-  }
-  
-  .music-item-info {
-    color: #b3b3b3;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #1c1c1c;
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 95%; /* Adjusted width */
+  max-width: 1600px; /* Adjusted max-width */
+  background-color: #2c2c2c;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 20px auto; /* Center the container and add margin */
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow: auto;
+  height: 65vh;
+}
+
+.carousel-container {
+  margin-bottom: 20px; /* Add some space below the carousel */
+}
+
+.top-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.room-container {
+  background-color: #2c2c2c;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.room-header {
+  font-size: 28px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.current-playing {
+  font-size: 20px;
+  color: #b3b3b3;
+  margin-bottom: 10px;
+}
+
+.controls-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.control-button {
+  background-color: #4f4d4d;
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.control-button:hover {
+  background-color: #484343;
+}
+
+.music-library {
+  background-color: #3c3c3c;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.music-library-header {
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.music-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #4c4c4c;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.music-item:hover {
+  background-color: #5c5c5c;
+}
+
+.music-item-name {
+  color: #ffffff;
+}
+
+.music-item-info {
+  color: #b3b3b3;
+}
+
+.genres-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px; /* Adjust width as needed */
+  background-color: #2e2e2e;
+  padding: 20px;
+  border-radius: 10px;
+  margin-left: 20px; /* Add margin for spacing */
+}
+
+.genres-header {
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.genres-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.genre-button {
+  background-color: #dcdcdc;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 16px;
+  border: none;
+  text-align: center;
+  color: #1c1c1c;
+}
+
+.genre-button:hover {
+  background-color: #bfbfbf;
+}
+
+.bg-green-600 {
+  background-color: #474747 !important;
+  color: #ffffff;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2c2c2c;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  max-width: 80%;
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.volume-control {
+  width: 100%;
+}
