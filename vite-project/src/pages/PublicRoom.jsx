@@ -96,13 +96,7 @@ const PublicRoom = () => {
   return (
     <div className="page-body">
       <div className="container">
-        <div className="sidebar">
-          <h2 className="sidebar-header">Your Library</h2>
-          <div className="sidebar-item">Playlists</div>
-          <div className="sidebar-item">Podcasts</div>
-          <div className="sidebar-item">Artists</div>
-          <div className="sidebar-item">Albums</div>
-        </div>
+        <div className="sidebar-empty-space"></div>
         <div className="main-content">
           <div className="top-content">
             <div className="room-container">
