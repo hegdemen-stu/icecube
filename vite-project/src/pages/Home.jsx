@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import background1 from './background1.png';
-import background2 from './background2.png'; // Ensure the correct path
-import './Home.css'; // Ensure this imports your CSS file
+import background2 from './background2.png';
+import './Home.css';
 
 export default function Home({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -11,8 +11,7 @@ export default function Home({ isAuthenticated }) {
     if (!isAuthenticated) {
       navigate('/Login');
     } else {
-      // Navigate to the private room page if authenticated
-      // navigate('/PrivateRoom'); // Uncomment and modify if you have a private room route
+      navigate('/PrivateRoom');
     }
   };
 
@@ -26,7 +25,9 @@ export default function Home({ isAuthenticated }) {
         <div className="huge-text">Unlock Your Music.</div>
         <div className="sub-text">Get Cube, Jam Out, Let Music Connect Us!</div>
         <div className="button_container_home">
+          <Link to="/PrivateRoom">
           <button className="button_private" onClick={handlePrivateRoomClick}>Private Cube</button>
+          </Link>
           <Link to="/PublicRoom">
             <button className="button_public">Public Cube</button>
           </Link>

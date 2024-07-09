@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import PublicRoom from './pages/PublicRoom';
+import PrivateRoom from './pages/PrivateRoom'; // Import PrivateRoom
 import Navbar from './components/navbar';
 import ChatPublic from './pages/ChatPublic';
 import axios from 'axios';
@@ -24,7 +25,7 @@ function App() {
             .then(response => {
                 if (response.data.isAuthenticated) {
                     setIsAuthenticated(true);
-                    setUser(response.data.user); // Set the user state
+                    setUser(response.data.user);
                 }
             })
             .catch(error => {
@@ -36,7 +37,7 @@ function App() {
         axios.post('/logout')
             .then(() => {
                 setIsAuthenticated(false);
-                setUser(null); // Clear the user state
+                setUser(null);
                 navigate('/');
             })
             .catch(error => {
@@ -53,6 +54,7 @@ function App() {
                 <Route path='/Register' element={<Register />} />
                 <Route path='/Login' element={<Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />} />
                 <Route path='/PublicRoom' element={<PublicRoom />} />
+                <Route path='/PrivateRoom' element={<PrivateRoom />} /> {/* Add PrivateRoom route */}
                 <Route path='/ChatPublic' element={<ChatPublic />} />
             </Routes>
         </>
