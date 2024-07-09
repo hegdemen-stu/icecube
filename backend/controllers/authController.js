@@ -45,10 +45,11 @@ const loginUser = (req, res, next) => {
                 console.log('Login error:', err);
                 return next(err);
             }
-            res.json({ message: 'Login successful', user });
+            res.json({ message: 'Login successful', user: { name: user.name, email: user.email } });
         });
     })(req, res, next);
 };
+
 
 const logoutUser = (req, res) => {
     req.logout((err) => {

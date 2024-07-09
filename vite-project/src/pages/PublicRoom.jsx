@@ -1,5 +1,10 @@
+// npm install react-modal
+// npm i use-sound
+// npm install react-icons
+
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
+import Modal from 'react-modal';
 import OneLove from '../assets/Onelove.mp3';
 import Attention from '../assets/Attention.mp3';
 import './PublicRoom.css';
@@ -16,6 +21,8 @@ const PublicRoom = () => {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentGenre, setCurrentGenre] = useState('POP');
+  const [volume, setVolume] = useState(0.5);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const audioRef = useRef(null);
 
   const songs = genres[currentGenre] || [];
@@ -46,7 +53,7 @@ const PublicRoom = () => {
   };
 
   const handleOtherOptions = () => {
-    console.log('Other options functionality to be implemented');
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -74,6 +81,12 @@ const PublicRoom = () => {
       audioRef.current.play();
     }
   }, [currentSongIndex, songs]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   useEffect(() => {
     console.log(`Current song: ${songs[currentSongIndex]?.name}`);
@@ -126,6 +139,25 @@ const PublicRoom = () => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Volume Control"
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        <h2>Volume Control</h2>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={(e) => setVolume(e.target.value)}
+          className="volume-control"
+        />
+        <button onClick={() => setIsModalOpen(false)}>Close</button>
+      </Modal>
     </div>
   );
 };
