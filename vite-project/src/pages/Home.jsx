@@ -13,7 +13,7 @@ export default function Home() {
       </div>
       <div className="content_text">
         <div className="huge-text">Unlock Your Music.</div>
-        <div className="sub-text">Get Cube, Jam Out, Let Music Connect Us!</div>
+        <div className="sub-text">Grab some ice, Get the cube, Chill !</div>
         <div className="button_container_home">
           <button className="button_private">Private Cube</button>
           <Link to="/PublicRoom">
