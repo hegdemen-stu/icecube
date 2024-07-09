@@ -4,6 +4,13 @@ import Modal from 'react-modal';
 import { Carousel } from 'react-responsive-carousel'; // Import Carousel component
 import OneLove from '../assets/Onelove.mp3';
 import Attention from '../assets/Attention.mp3';
+import Carousel1 from '../assets/carousel1.jpg'; // Importing images
+import Carousel2 from '../assets/carousel2.jpg';
+import Carousel3 from '../assets/carousel3.jpg';
+import Carousel4 from '../assets/carousel4.jpg';
+import Carousel5 from '../assets/carousel5.jpg';
+import Carousel6 from '../assets/carousel6.jpg';
+import Carousel7 from '../assets/carousel7.jpg';
 import './PublicRoom.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import carousel styles
 
@@ -96,15 +103,27 @@ const PublicRoom = () => {
       <div className="container">
         <div className="main-content">
           <div className="carousel-container">
-            <Carousel showThumbs={false}>
+            <Carousel showThumbs={false} autoPlay interval={3000} infiniteLoop>
               <div>
-                <img src="/path/to/your/image1.jpg" alt="Carousel Image 1" />
+                <img src={Carousel1} alt="Carousel Image 1" />
               </div>
               <div>
-                <img src="/path/to/your/image2.jpg" alt="Carousel Image 2" />
+                <img src={Carousel2} alt="Carousel Image 2" />
               </div>
               <div>
-                <img src="/path/to/your/image3.jpg" alt="Carousel Image 3" />
+                <img src={Carousel3} alt="Carousel Image 3" />
+              </div>
+              <div>
+                <img src={Carousel4} alt="Carousel Image 4" />
+              </div>
+              <div>
+                <img src={Carousel5} alt="Carousel Image 5" />
+              </div>
+              <div>
+                <img src={Carousel6} alt="Carousel Image 6" />
+              </div>
+              <div>
+                <img src={Carousel7} alt="Carousel Image 7" />
               </div>
             </Carousel>
           </div>
