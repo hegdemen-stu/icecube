@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast';
 
-export default function Login({ setIsAuthenticated }) {
+export default function Login({ setIsAuthenticated, setUser }) {
     const navigate = useNavigate();
     const [data, setData] = useState({
         email: '',
@@ -22,6 +22,7 @@ export default function Login({ setIsAuthenticated }) {
             } else {
                 setData({});
                 setIsAuthenticated(true);
+                setUser(response.data.user); // Set the user state
                 toast.success('Login Successful...welcome');
                 navigate('/');
             }

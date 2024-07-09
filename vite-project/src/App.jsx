@@ -15,6 +15,7 @@ axios.defaults.withCredentials = true;
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,6 +24,7 @@ function App() {
             .then(response => {
                 if (response.data.isAuthenticated) {
                     setIsAuthenticated(true);
+                    setUser(response.data.user); // Set the user state
                 }
             })
             .catch(error => {
@@ -34,6 +36,7 @@ function App() {
         axios.post('/logout')
             .then(() => {
                 setIsAuthenticated(false);
+                setUser(null); // Clear the user state
                 navigate('/');
             })
             .catch(error => {
@@ -43,12 +46,12 @@ function App() {
 
     return (
         <>
-            <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+            <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} user={user} />
             <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
             <Routes>
                 <Route path='/' element={<Home isAuthenticated={isAuthenticated} />} />
                 <Route path='/Register' element={<Register />} />
-                <Route path='/Login' element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                <Route path='/Login' element={<Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />} />
                 <Route path='/PublicRoom' element={<PublicRoom />} />
                 <Route path='/ChatPublic' element={<ChatPublic />} />
             </Routes>
