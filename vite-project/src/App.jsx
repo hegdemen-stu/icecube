@@ -9,6 +9,7 @@ import PrivateRoom from './pages/PrivateRoom'; // Import PrivateRoom
 import Navbar from './components/navbar';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
+import GeneratedRoom from './pages/GeneratedRoom';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -54,6 +55,7 @@ function App() {
                 <Route path='/Login' element={<Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />} />
                 <Route path='/PublicRoom' element={<PublicRoom />} />
                 <Route path='/PrivateRoom' element={<PrivateRoom />} /> {/* Add PrivateRoom route */}
+                <Route path="/PrivateRoom/:roomCode" element={<GeneratedRoom />} />
             </Routes>
         </>
     );
