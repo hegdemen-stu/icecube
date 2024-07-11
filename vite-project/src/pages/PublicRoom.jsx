@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
 import Modal from 'react-modal';
-import { Carousel } from 'react-responsive-carousel'; // Import Carousel component
-import OneLove from '../assets/Onelove.mp3';
-import Attention from '../assets/Attention.mp3';
-import Carousel1 from '../assets/carousel1.jpg'; // Importing images
+import { Carousel } from 'react-responsive-carousel';
+import Carousel1 from '../assets/carousel1.jpg';
 import Carousel2 from '../assets/carousel2.jpg';
 import Carousel3 from '../assets/carousel3.jpg';
 import Carousel4 from '../assets/carousel4.jpg';
@@ -12,11 +10,12 @@ import Carousel5 from '../assets/carousel5.jpg';
 import Carousel6 from '../assets/carousel6.jpg';
 import Carousel7 from '../assets/carousel7.jpg';
 import './PublicRoom.css';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import carousel styles
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import axios from 'axios';
 
 const genres = {
-  POP: [{ name: 'One Love', url: OneLove }],
-  Rock: [{ name: 'Attention', url: Attention }],
+  POP: [],
+  Rock: [],
   Melody: [],
   LoFi: [],
   Jazz: [],
@@ -29,8 +28,30 @@ const PublicRoom = () => {
   const [volume, setVolume] = useState(0.5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const audioRef = useRef(null);
+  const [songs, setSongs] = useState([]);
 
-  const songs = genres[currentGenre] || [];
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/songs');
+        console.log('API Response:', response.data); // Log the response data
+    
+        if (Array.isArray(response.data)) {
+          const songsData = response.data.map((song) => ({
+            name: song.filename,
+            url: `http://localhost:8000/stream/${song.filename}`,
+          }));
+          setSongs(songsData);
+        } else {
+          console.error('Unexpected response format:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching songs:', error);
+      }
+    };
+    
+    fetchSongs();
+  }, []);
 
   const togglePlayPause = () => {
     if (!isPlaying && songs[currentSongIndex]) {

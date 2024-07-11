@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const User = require('./models/user'); // Import User model
+const { MongoClient, GridFSBucket } = require('mongodb');
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log('Database Connected'))
@@ -37,6 +38,34 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use('/', require('./routes/authRoutes'));
+
+const conn = mongoose.connection;
+conn.once('open', () => {
+    console.log('MongoDB connection established successfully');
+});
+
+let gfs;
+
+conn.once('open', () => {
+    const gfs = new GridFSBucket(conn.db, {
+      bucketName: 'musicFiles'
+    });
+  
+    app.get('/songs', async (req, res) => {
+      try {
+        const files = await gfs.find().toArray();
+        res.json(files); // Ensure this returns an array
+      } catch (error) {
+        res.status(500).json({ error: 'Error fetching songs' });
+      }
+    });
+  
+    app.get('/stream/:filename', (req, res) => {
+      const readStream = gfs.openDownloadStreamByName(req.params.filename);
+      readStream.pipe(res);
+    });
+  });
+  
 
 const port = 8000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));

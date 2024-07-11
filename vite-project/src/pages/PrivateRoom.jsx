@@ -38,6 +38,8 @@ const PrivateRoom = () => {
     return code;
   };
 
+  
+
   return (
     <div
       className="private-room-container"
