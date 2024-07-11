@@ -40,6 +40,7 @@ const PublicRoom = () => {
           const songsData = response.data.map((song) => ({
             name: song.filename,
             url: `http://localhost:8000/stream/${song.filename}`,
+            metadata: song.metadata // Include metadata for genre display
           }));
           setSongs(songsData);
         } else {
@@ -119,6 +120,42 @@ const PublicRoom = () => {
     console.log(`Is playing: ${isPlaying}`);
   }, [currentSongIndex, isPlaying, songs]);
 
+  // Function to fetch songs based on selected genre
+  const fetchSongsByGenre = async (genre) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/songs`, {
+        params: { genre }
+      });
+
+      if (response.status !== 200) {
+        throw new Error('Error fetching songs');
+      }
+
+      const songsData = response.data.map((song) => ({
+        name: song.filename,
+        url: `http://localhost:8000/stream/${song.filename}`,
+        metadata: song.metadata // Include metadata for genre display
+      }));
+      setSongs(songsData);
+    } catch (error) {
+      console.error('Error fetching songs by genre:', error);
+      setSongs([]);
+    }
+  };
+
+  // Handle genre selection
+  const handleGenreChange = async (event) => {
+    const selectedGenre = event.target.value;
+    setCurrentGenre(selectedGenre);
+    
+    // Pause the playback and reset current song index
+    setIsPlaying(false);
+    setCurrentSongIndex(0); // Reset to the first song index or handle differently as per your requirement
+    
+    // Fetch songs based on the selected genre
+    await fetchSongsByGenre(selectedGenre);
+  };
+
   return (
     <div className="page-body">
       <div className="container">
@@ -171,7 +208,7 @@ const PublicRoom = () => {
               <button
                 key={genre}
                 className={`genre-button ${currentGenre === genre ? 'bg-green-600' : ''}`}
-                onClick={() => setCurrentGenre(genre)}
+                onClick={() => handleGenreChange({ target: { value: genre } })}
               >
                 {genre}
               </button>

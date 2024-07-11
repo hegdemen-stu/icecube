@@ -53,12 +53,15 @@ conn.once('open', () => {
   
     app.get('/songs', async (req, res) => {
       try {
-        const files = await gfs.find().toArray();
-        res.json(files); // Ensure this returns an array
+          const { genre } = req.query;
+          const query = genre ? { 'metadata.genre': genre } : {};
+          const files = await gfs.find(query).toArray();
+          res.json(files);
       } catch (error) {
-        res.status(500).json({ error: 'Error fetching songs' });
+          res.status(500).json({ error: 'Error fetching songs' });
       }
-    });
+  });
+  
   
     app.get('/stream/:filename', (req, res) => {
       const readStream = gfs.openDownloadStreamByName(req.params.filename);
