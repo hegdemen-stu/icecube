@@ -1,43 +1,88 @@
 .private-room-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #1c1c1c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #2c2c2c; /* Dark background to match your theme */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.room-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.join-room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.join-room-button, .create-room-button {
+  padding: 15px 30px;
+  font-size: 16px;
+  color: white;
+  background-color: #555;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.join-room-button:hover, .create-room-button:hover {
+  background-color: #777;
+}
+
+.join-room-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.glassmorphic-dropdown {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+}
+
+.join-room-form input {
+  padding: 10px;
+  font-size: 16px;
+  width: 200px;
+  border: none;
+  border-radius: 5px;
+}
+
+.submit-room-code {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #555;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-room-code:hover {
+  background-color: #777;
+}
+
+@media (max-width: 600px) {
+  .join-room-button, .create-room-button {
+    width: 100%;
   }
-  
-  .music-player {
-    background: #333;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
+
+  .join-room-form input {
+    width: 100%;
   }
-  
-  .music-player h2 {
-    color: #fff;
-  }
-  
-  .music-player p {
-    color: #aaa;
-  }
-  
-  .controls button {
-    margin: 0 10px;
-    padding: 10px;
-    background: #444;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .genres button {
-    margin: 5px;
-    padding: 10px;
-    background: #555;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-  }
-  
+}

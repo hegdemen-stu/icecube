@@ -25,9 +25,9 @@ export default function Home({ isAuthenticated }) {
         <div className="huge-text">Unlock Your Music.</div>
         <div className="sub-text">Get Cube, Jam Out, Let Music Connect Us!</div>
         <div className="button_container_home">
-          <Link to="/PrivateRoom">
+         
           <button className="button_private" onClick={handlePrivateRoomClick}>Private Cube</button>
-          </Link>
+         
           <Link to="/PublicRoom">
             <button className="button_public">Public Cube</button>
           </Link>
