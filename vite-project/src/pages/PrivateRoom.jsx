@@ -52,7 +52,7 @@ const PrivateRoom = () => {
           <button className="join-room-button" onClick={handleJoinButtonClick}>
             Join Room
           </button>
-          {isJoinFormVisible && (
+         {isJoinFormVisible && (
             <div className="join-room-form glassmorphic-dropdown">
               <input type="text" placeholder="Paste/Type Room Code" />
               <button className="submit-room-code">Submit</button>
