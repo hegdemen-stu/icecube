@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Chatbox.css';
+import './Chatbox.css'
 const ChatBox = ({ socket, roomCode, userId }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -7,10 +7,7 @@ const ChatBox = ({ socket, roomCode, userId }) => {
 
   useEffect(() => {
     socket.on('chat message', (msg) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        typeof msg === 'string' ? { text: msg } : msg
-      ]);
+      setMessages((prevMessages) => [...prevMessages, msg]);
     });
 
     return () => socket.off('chat message');
@@ -25,7 +22,7 @@ const ChatBox = ({ socket, roomCode, userId }) => {
   const sendMessage = (e) => {
     e.preventDefault();
     if (inputMessage && socket) {
-      socket.emit('chat message', { text: inputMessage, username: userId }, roomCode);
+      socket.emit('chat message', inputMessage, roomCode);
       setInputMessage('');
     }
   };
@@ -35,7 +32,7 @@ const ChatBox = ({ socket, roomCode, userId }) => {
       <div className="chat-messages" ref={chatBoxRef}>
         {messages.map((msg, index) => (
           <div key={index} className="message">
-            {msg.username && <strong>{msg.username}:</strong>} {msg.text || msg}
+            <strong>{msg.username}:</strong> {msg.text}
           </div>
         ))}
       </div>

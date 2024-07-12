@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import ChatBox from '../components/ChatBox';
 import axios from 'axios';
+import backgroundImgs from '../assets/background6.jpg'; // Import your background image
+import './GeneratedRoom.css'; // Import CSS file
 
 const GeneratedRoom = () => {
   const { roomCode } = useParams();
@@ -23,7 +25,7 @@ const GeneratedRoom = () => {
           newSocket.emit('join room', roomCode, response.data.user._id);
 
           newSocket.on('user joined', (joinedUsername) => {
-            console.log(User `${joinedUsername} joined the room`);
+            console.log(`User ${joinedUsername} joined the room`);
           });
 
           newSocket.on('update user count', (count) => {
@@ -56,11 +58,21 @@ const GeneratedRoom = () => {
   }
 
   return (
-    <div className="generated-room">
-      <h1>Welcome to Private Room</h1>
-      <p>Your room code is: {roomCode}</p>
-      <p>Users in room: {userCount}</p>
-      <ChatBox socket={socket} roomCode={roomCode} userId={userId} />
+    <div className='background-room' style={{ backgroundImage: `url(${backgroundImgs})` }}>
+      <div className="generated-room">
+        <div className="main-content">
+          <h1>Hi there! Welcome to your private room</h1>
+        </div>
+        <div className="chat-container">
+          <div className="chat-box-container">
+            <ChatBox socket={socket} roomCode={roomCode} userId={userId} />
+          </div>
+        </div>
+      </div>
+      <div className="room-info">
+        <p>Your room code is: {roomCode}</p>
+        <p>Users in room: {userCount}</p>
+      </div>
     </div>
   );
 };

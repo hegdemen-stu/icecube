@@ -1,62 +1,102 @@
-.generated-room {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.background-container { 
+.background-room {
+  min-height: 100vh;
+  width: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  width: 100%;
-  height: 100%;
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  padding: 20px;
 }
 
-.top-section {
-  text-align: center;
-}
-
-.bottom-section {
-  margin-top: auto;
-  text-align: center;
-}
-
-.room-code {
+.generated-room {
   display: flex;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.1); /* Glassmorphic background */
-  backdrop-filter: blur(10px); /* Glassmorphic effect */
+  justify-content: space-between;
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.generated-room .main-content {
+  flex: 1;
+  max-width: 60%;
+  padding-right: 20px;
+}
+
+.generated-room .main-content h1 {
+  font-size: 54px;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+
+.generated-room .chat-container {
+  max-width: 400px;
+  margin-left: 20px;
+  margin-top: 60px; /* Add this line to bring the chat container down */
+}
+
+.generated-room .chat-box-container {
+  height: calc(100vh - 200px); /* Adjusted to account for the new top margin */
+  background-color: rgba(116, 116, 116, 0.24);
+  border: 1px solid #ccc;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.generated-room .chat-box {
+  height: 98%;
+  display: flex;
+  flex-direction: column;
   padding: 10px;
-  box-shadow: 0 8px 32px rgba(77, 77, 77, 0.37); /* Glassmorphic shadow */
+  background-color: rgba(116, 116, 116, 0.24);
 }
 
-.room-code p {
-  margin-right: 10px;
-}
-
-.room-code input {
-  margin-right: 10px;
-  padding: 5px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.1);
+.room-info {
+  padding: 10px 20px;
   color: white;
+  display: flex;
+  justify-content: space-between;
 }
 
-.room-code button {
-  padding: 5px 10px;
-  background-color: rgba(96, 96, 96, 0.8); /* Glassmorphic button background */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(147, 147, 147, 0.24); /* Glassmorphic button shadow */
+.room-info p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1024px) {
+  .generated-room {
+    flex-direction: column;
+  }
+
+  .generated-room .main-content {
+    max-width: 100%;
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .generated-room .chat-container {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-top: 20px; /* Adjust for smaller screens */
+  }
+
+  .generated-room .chat-box-container {
+    height: 500px;
+  }
+
+  .room-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .room-info p {
+    margin-bottom: 5px;
+  }
 }
