@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const ChatBox = ({ socket, roomCode }) => {
+const ChatBox = ({ socket, roomCode, userId }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const chatBoxRef = useRef(null);
@@ -32,7 +32,7 @@ const ChatBox = ({ socket, roomCode }) => {
       <div className="chat-messages" ref={chatBoxRef}>
         {messages.map((msg, index) => (
           <div key={index} className="message">
-            {msg}
+            <strong>{msg.username}:</strong> {msg.text}
           </div>
         ))}
       </div>
