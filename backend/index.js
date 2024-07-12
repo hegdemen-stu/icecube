@@ -6,12 +6,22 @@ const passport = require('passport');
 const session = require('express-session');
 const User = require('./models/user'); // Import User model
 const { MongoClient, GridFSBucket } = require('mongodb');
+const http = require('http'); // Import http module
+const { Server } = require('socket.io'); // Import Server from socket.io
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log('Database Connected'))
     .catch((err) => console.log('Database not connected', err));
 
 const app = express();
+const server = http.createServer(app); // Create a server using http
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173', // Your frontend origin
+        methods: ['GET', 'POST'],
+        credentials: true,
+    }
+});
 
 app.use(cors({
     origin: 'http://localhost:5173', // Your frontend origin
@@ -67,8 +77,31 @@ conn.once('open', () => {
       const readStream = gfs.openDownloadStreamByName(req.params.filename);
       readStream.pipe(res);
     });
+});
+
+// Handle socket connections
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('create room', (roomCode) => {
+    socket.join(roomCode);
+    console.log(`Room created: ${roomCode}`);
   });
-  
+
+  socket.on('join room', (roomCode) => {
+    socket.join(roomCode);
+    console.log(`User joined room: ${roomCode}`);
+    io.to(roomCode).emit('user joined', socket.id);
+  });
+
+  socket.on('chat message', (msg, roomCode) => {
+    io.to(roomCode).emit('chat message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 const port = 8000;
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+server.listen(port, () => console.log(`Server is running on port ${port}`));
