@@ -1,58 +1,66 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import ChatBox from '../components/ChatBox';
-import './GeneratedRoom.css';
+import axios from 'axios';
 
 const GeneratedRoom = () => {
   const { roomCode } = useParams();
-  const roomCodeRef = useRef(null);
+  const navigate = useNavigate();
   const [socket, setSocket] = useState(null);
+  const [userCount, setUserCount] = useState(0);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:8000');
-    setSocket(newSocket);
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('/check-auth', { withCredentials: true });
+        if (response.data.isAuthenticated) {
+          setUserId(response.data.user._id);
+          const newSocket = io('http://localhost:8000', { withCredentials: true });
+          setSocket(newSocket);
 
-    newSocket.emit('join room', roomCode);
+          newSocket.emit('join room', roomCode, response.data.user._id);
 
-    newSocket.on('user joined', (userId) => {
-      console.log(`User ${userId} joined the room`);
-    });
+          newSocket.on('user joined', (joinedUsername) => {
+            console.log(User `${joinedUsername} joined the room`);
+          });
 
-    return () => {
-      newSocket.disconnect();
+          newSocket.on('update user count', (count) => {
+            setUserCount(count);
+          });
+
+          newSocket.on('error', (errorMessage) => {
+            console.error(errorMessage);
+            alert(errorMessage);
+            navigate('/PrivateRoom');
+          });
+
+          return () => {
+            newSocket.disconnect();
+          };
+        } else {
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        navigate('/login');
+      }
     };
-  }, [roomCode]);
 
-  const copyRoomCode = () => {
-    if (roomCodeRef.current) {
-      roomCodeRef.current.select();
-      document.execCommand('copy');
-    }
-  };
+    fetchUserData();
+  }, [roomCode, navigate]);
 
-  if (!socket) {
-    return <div>Connecting...</div>;
+  if (!socket || !userId) {
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="generated-room">
-      <div className="top-section">
-        <h1>Hi there, Welcome to your private cube!</h1>
-      </div>
-      <div className="bottom-section">
-        <div className="room-code">
-          <p>Your room code is:</p>
-          <input
-            type="text"
-            ref={roomCodeRef}
-            defaultValue={roomCode}
-            readOnly
-          />
-          <button onClick={copyRoomCode}>Copy Code</button>
-        </div>
-      </div>
-      <ChatBox socket={socket} roomCode={roomCode} />
+      <h1>Welcome to Private Room</h1>
+      <p>Your room code is: {roomCode}</p>
+      <p>Users in room: {userCount}</p>
+      <ChatBox socket={socket} roomCode={roomCode} userId={userId} />
     </div>
   );
 };

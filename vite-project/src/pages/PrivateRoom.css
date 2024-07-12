@@ -20,8 +20,8 @@
   align-items: center;
 }
 
-.join-room-button, .create-room-button {
-  padding: 30px 60px; /* Increased padding for bigger buttons */
+.join-room-button {
+  padding: 30px 70px; /* Increased padding for bigger buttons */
   font-size: 30px; /* Increased font size */
   color: rgba(255, 255, 255, 0.85);
   background-color: rgba(255, 255, 255, 0.15);
@@ -31,6 +31,18 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.create-room-button{
+padding: 30px 60px; /* Increased padding for bigger buttons */
+font-size: 30px; /* Increased font size */
+color: rgba(255, 255, 255, 0.85);
+background-color: rgba(255, 255, 255, 0.15);
+border: 1px solid rgba(255, 255, 255, 0.15);
+border-radius: 10px;
+cursor: pointer;
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .join-room-button:hover, .create-room-button:hover {

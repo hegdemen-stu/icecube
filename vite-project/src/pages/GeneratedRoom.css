@@ -1,33 +1,31 @@
-/* GeneratedRoom.css */
-
 .generated-room {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.background-container { 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 100vh; /* Full viewport height */
-  text-align: center;
   position: relative;
-  border-radius: 20px;
   padding: 20px;
 }
 
 .top-section {
-  position: absolute;
-  top: 150px; /* Adjust as needed */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
+  text-align: center;
 }
 
 .bottom-section {
-  position: absolute;
-  bottom: 20px; /* Adjust as needed */
-  left: 20px; /* Adjust as needed */
-}
-
-.generated-room h1 {
-  margin: 0;
+  margin-top: auto;
+  text-align: center;
 }
 
 .room-code {
