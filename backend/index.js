@@ -80,26 +80,77 @@ conn.once('open', () => {
 });
 
 // Handle socket connections
+const rooms = new Map();
+
 io.on('connection', (socket) => {
   console.log('A user connected');
+  let currentRoom = null;
+  let currentUsername = null;
 
-  socket.on('create room', (roomCode) => {
-    socket.join(roomCode);
-    console.log(`Room created: ${roomCode}`);
+  socket.on('create room', async (roomCode, userId) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      currentRoom = roomCode;
+      currentUsername = user.name;
+
+      socket.join(roomCode);
+      if (!rooms.has(roomCode)) {
+        rooms.set(roomCode, new Set([currentUsername]));
+      } else {
+        rooms.get(roomCode).add(currentUsername);
+      }
+      console.log(`Room created: ${roomCode} by ${currentUsername}`);
+      io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
+    } catch (error) {
+      console.error('Error creating room:', error);
+      socket.emit('error', 'Failed to create room');
+    }
   });
 
-  socket.on('join room', (roomCode) => {
-    socket.join(roomCode);
-    console.log(`User joined room: ${roomCode}`);
-    io.to(roomCode).emit('user joined', socket.id);
+  socket.on('join room', async (roomCode, userId) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      currentRoom = roomCode;
+      currentUsername = user.name;
+
+      socket.join(roomCode);
+      if (!rooms.has(roomCode)) {
+        rooms.set(roomCode, new Set([currentUsername]));
+      } else {
+        rooms.get(roomCode).add(currentUsername);
+      }
+      console.log(`User ${currentUsername} joined room: ${roomCode}`);
+      io.to(roomCode).emit('user joined', currentUsername);
+      io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
+    } catch (error) {
+      console.error('Error joining room:', error);
+      socket.emit('error', 'Failed to join room');
+    }
   });
 
   socket.on('chat message', (msg, roomCode) => {
-    io.to(roomCode).emit('chat message', msg);
+    if (currentUsername && currentRoom === roomCode) {
+      io.to(roomCode).emit('chat message', { text: msg, username: currentUsername });
+    }
   });
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
+    if (currentRoom && currentUsername) {
+      const room = rooms.get(currentRoom);
+      if (room) {
+        room.delete(currentUsername);
+        if (room.size === 0) {
+          rooms.delete(currentRoom);
+        } else {
+          io.to(currentRoom).emit('update user count', room.size);
+        }
+      }
+    }
   });
 });
 
