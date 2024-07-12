@@ -21,18 +21,22 @@
 }
 
 .join-room-button, .create-room-button {
-  padding: 15px 30px;
-  font-size: 16px;
-  color: white;
-  background-color: #555;
-  border: none;
-  border-radius: 5px;
+  padding: 30px 60px; /* Increased padding for bigger buttons */
+  font-size: 30px; /* Increased font size */
+  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .join-room-button:hover, .create-room-button:hover {
-  background-color: #777;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .join-room-form {

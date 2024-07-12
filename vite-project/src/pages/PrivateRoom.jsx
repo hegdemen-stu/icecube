@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PrivateRoom.css';
-import backgroundImage from '../assets/background5.jpg';
+import backgroundImage from '../assets/background5.jpeg';
 import io from 'socket.io-client';
 
 const PrivateRoom = () => {
