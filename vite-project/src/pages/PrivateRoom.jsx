@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PrivateRoom.css';
-import backgroundImage from '../assets/background5.jpeg';
+import backgroundImage from '../assets/background5.jpg';
 import io from 'socket.io-client';
+import axios from 'axios';
 
 const PrivateRoom = () => {
   const [isJoinFormVisible, setJoinFormVisible] = useState(false);
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
   const [generatedCode, setGeneratedCode] = useState('');
   const [joinCode, setJoinCode] = useState('');
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
-  const socket = io('http://localhost:8000');
+  const socket = io('http://localhost:8000', { withCredentials: true });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('/check-auth', { withCredentials: true });
+        if (response.data.isAuthenticated) {
+          setUserId(response.data.user._id);
+        } else {
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        navigate('/login');
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
 
   const handleJoinButtonClick = () => {
     setJoinFormVisible(!isJoinFormVisible);
@@ -20,7 +40,6 @@ const PrivateRoom = () => {
     const newCode = generateRandomCode();
     setGeneratedCode(newCode);
     setCreateFormVisible(true);
-    socket.emit('create room', newCode);
   };
 
   const handleCopyCode = () => {
@@ -28,13 +47,20 @@ const PrivateRoom = () => {
   };
 
   const handleEnterRoom = () => {
-    navigate(`/PrivateRoom/${generatedCode}`);
+    if (userId) {
+      socket.emit('create room', generatedCode, userId);
+      navigate(`/PrivateRoom/${generatedCode}`);
+    } else {
+      alert("Please log in to create a room");
+    }
   };
 
   const handleJoinRoom = () => {
-    if (joinCode) {
-      socket.emit('join room', joinCode);
+    if (joinCode && userId) {
+      socket.emit('join room', joinCode, userId);
       navigate(`/PrivateRoom/${joinCode}`);
+    } else {
+      alert("Please enter a room code and ensure you're logged in");
     }
   };
 
@@ -47,6 +73,10 @@ const PrivateRoom = () => {
     }
     return code;
   };
+
+  if (!userId) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="private-room-container" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
