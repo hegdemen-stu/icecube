@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Chatbox.css'
+
 const ChatBox = ({ socket, roomCode, userId }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
