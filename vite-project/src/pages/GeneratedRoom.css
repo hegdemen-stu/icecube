@@ -22,28 +22,24 @@ html, body, #root {
   flex-grow: 1;
 }
 
-.empty-container {
-  width: 200px; /* Adjust as needed */
-  background-color: transparent; /* Can change to a color for visibility if needed */
-  border: 1px solid #ccc; /* Temporary border for visibility */
-}
-
 .generated-room .main-content {
   flex: 1;
   max-width: 60%;
   padding-right: 20px;
+  margin-top: 20px; /* Add margin-top to bring the main content down */
 }
 
 .generated-room .main-content h1 {
   font-size: 54px;
   margin-bottom: 20px;
-  margin-top: 30px;
+  margin-top: 100px;
+  white-space: nowrap;
 }
 
 .music-player {
   display: flex;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 40px; /* Increase margin-top to bring the music player down */
   justify-content: space-between;
 }
 
@@ -69,7 +65,7 @@ html, body, #root {
 
 .controls-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 10px;
 }
 
@@ -81,6 +77,7 @@ html, body, #root {
   font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin: 0 5px;
 }
 
 .control-button:hover {
@@ -89,55 +86,68 @@ html, body, #root {
 
 .genres-sidebar {
   width: 150px;
-  background-color: #333;
+  background-color: #4a46464d;
   padding: 10px;
   border-radius: 8px;
 }
 
 .genres-header {
-  font-size: 1.5rem;
+  font-size: 24px;
+  color: #ffffff;
   margin-bottom: 10px;
-  color: #fff;
 }
 
 .genres-list {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .genre-button {
-  background-color: #444;
-  color: #fff;
-  border: none;
-  padding: 8px;
-  margin-bottom: 5px;
+  background-color: #777777;
+  padding: 25px 30px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 18px;
+  border: none;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .genre-button:hover {
-  background-color: #666;
+  background-color: #555555;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
 }
 
-.genre-button.bg-green-600 {
-  background-color: #32a852;
+.bg-green-600 {
+  background-color: #00000058 !important;
+  color: #ffffff;
 }
 
 .generated-room .chat-container {
   margin-left: 20px;
   margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  height: calc(80vh - 90px);
 }
 
 .generated-room .chat-box-container {
-  height: 100%;
-  background-color: rgba(116, 116, 116, 0.24);
-  border: 1px solid #ccc;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(150, 134, 134, 0.24);
+  border: 1px solid #7a6d6d;
   border-radius: 8px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .generated-room .chat-box {
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -221,12 +231,4 @@ html, body, #root {
   right: 0;
   background-color: #ccc;
   cursor: se-resize;
-}
-.empty-container {
-  width: 200px; /* Adjust as needed */
-  background-color: transparent; /* Can change to a color for visibility if needed */
-  border: 1px solid #ccc; /* Temporary border for visibility */
-  border-radius: 8px;
-  padding: 20px;
-  margin-right: 20px; /* Adjust margin as needed */
 }

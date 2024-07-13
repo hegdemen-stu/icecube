@@ -16,7 +16,7 @@ import axios from 'axios';
 const genres = {
   POP: [],
   Rock: [],
-  Melody: [],
+  "R&B":[],
   LoFi: [],
   Jazz: [],
 };
@@ -38,8 +38,9 @@ const PublicRoom = () => {
     
         if (Array.isArray(response.data)) {
           const songsData = response.data.map((song) => ({
-            name: song.filename,
-            url: `http://localhost:8000/stream/${song.filename}`,
+            name: song.metadata.name, // Update to use name from metadata
+            artist: song.metadata.artist, // Update to use artist from metadata
+            url:` http://localhost:8000/stream/${song.filename}`,
             metadata: song.metadata // Include metadata for genre display
           }));
           setSongs(songsData);
@@ -117,6 +118,7 @@ const PublicRoom = () => {
 
   useEffect(() => {
     console.log(`Current song: ${songs[currentSongIndex]?.name}`);
+    console.log(`Artist: ${songs[currentSongIndex]?.artist}`);
     console.log(`Is playing: ${isPlaying}`);
   }, [currentSongIndex, isPlaying, songs]);
 
@@ -126,23 +128,25 @@ const PublicRoom = () => {
       const response = await axios.get(`http://localhost:8000/songs`, {
         params: { genre }
       });
-
+  
       if (response.status !== 200) {
         throw new Error('Error fetching songs');
       }
-
+  
       const songsData = response.data.map((song) => ({
-        name: song.filename,
+        name: song.metadata.name,
+        artist: song.metadata.artist,
         url: `http://localhost:8000/stream/${song.filename}`,
-        metadata: song.metadata // Include metadata for genre display
+        metadata: song.metadata
       }));
-      setSongs(songsData);
+  
+      setSongs(songsData); // Update songs state with songsData fetched by genre
     } catch (error) {
       console.error('Error fetching songs by genre:', error);
-      setSongs([]);
+      setSongs([]); // Clear songs state on error
     }
   };
-
+  
   // Handle genre selection
   const handleGenreChange = async (event) => {
     const selectedGenre = event.target.value;
@@ -158,8 +162,8 @@ const PublicRoom = () => {
 
   return (
     <div className="page-body">
-      <div className="container">
-        <div className="main-content">
+      <div className="container-pr">
+        <div className="main-content-pr">
           <div className="carousel-container">
             <Carousel showThumbs={false} autoPlay interval={3000} infiniteLoop>
               <div>
@@ -187,8 +191,10 @@ const PublicRoom = () => {
           </div>
           <div className="top-content">
             <div className="room-container">
-              <h2 className="room-header">PublicRoom Music Player</h2>
-              <div className="current-playing">Now Playing: {songs[currentSongIndex]?.name || 'No song available'}</div>
+              <h2 className="room-header-public">Tune in and Relax!</h2>
+              <div className="current-playing">
+                Now Playing: {songs[currentSongIndex]?.name || 'No song available'} - {songs[currentSongIndex]?.artist || 'Unknown artist'}
+              </div>
               <audio ref={audioRef} src={songs[currentSongIndex]?.url} />
               <div className="controls-container">
                 <button className="control-button" onClick={playPreviousSong}><FaStepBackward /></button>
@@ -201,13 +207,13 @@ const PublicRoom = () => {
             </div>
           </div>
         </div>
-        <div className="genres-sidebar">
-          <h2 className="genres-header">Genres</h2>
-          <div className="genres-list">
+        <div className="genres-sidebar-pr">
+          <h2 className="genres-header-pr">Genres</h2>
+          <div className="genres-list-pr">
             {Object.keys(genres).map((genre) => (
               <button
                 key={genre}
-                className={`genre-button ${currentGenre === genre ? 'bg-green-600' : ''}`}
+                className={`genre-button-pr ${currentGenre === genre ? 'bg-green-600' : ''}`}
                 onClick={() => handleGenreChange({ target: { value: genre } })}
               >
                 {genre}

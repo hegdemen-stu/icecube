@@ -1,3 +1,5 @@
+/*npm i react-draggable */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -5,10 +7,8 @@ import ChatBox from '../components/ChatBox';
 import axios from 'axios';
 import backgroundImgs from '../assets/background6.jpg';
 import Draggable from 'react-draggable';
-import { Resizable } from 'react-resizable';
 import Modal from 'react-modal';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
-import 'react-resizable/css/styles.css';
 import './GeneratedRoom.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -26,7 +26,7 @@ const GeneratedRoom = () => {
   const [socket, setSocket] = useState(null);
   const [userCount, setUserCount] = useState(0);
   const [userId, setUserId] = useState(null);
-  const [chatSize, setChatSize] = useState({ width: 400, height: 500 });
+  const [chatPosition, setChatPosition] = useState({ x: 0, y: 0 });
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentGenre, setCurrentGenre] = useState('POP');
@@ -193,8 +193,9 @@ const GeneratedRoom = () => {
     await fetchSongsByGenre(selectedGenre);
   };
 
-  const onResize = (event, { size }) => {
-    setChatSize({ width: size.width, height: size.height });
+  const handleDrag = (e, ui) => {
+    const { x, y } = chatPosition;
+    setChatPosition({ x: x + ui.deltaX, y: y + ui.deltaY });
   };
 
   if (!socket || !userId) {
@@ -236,20 +237,12 @@ const GeneratedRoom = () => {
             </div>
           </div>
         </div>
-        <Draggable bounds="parent">
-          <Resizable
-            width={chatSize.width}
-            height={chatSize.height}
-            onResize={onResize}
-            minConstraints={[200, 200]}
-            maxConstraints={[600, 800]}
-          >
-            <div className="chat-container" style={{ width: chatSize.width, height: chatSize.height }}>
-              <div className="chat-box-container">
-                <ChatBox socket={socket} roomCode={roomCode} userId={userId} />
-              </div>
+        <Draggable bounds="parent" onDrag={handleDrag}>
+          <div className="chat-container" style={{ left: chatPosition.x, top: chatPosition.y }}>
+            <div className="chat-box-container">
+              <ChatBox socket={socket} roomCode={roomCode} userId={userId} />
             </div>
-          </Resizable>
+          </div>
         </Draggable>
       </div>
       <div className="room-info">

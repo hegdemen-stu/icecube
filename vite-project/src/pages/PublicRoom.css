@@ -6,13 +6,13 @@
   margin: 0;
   background-color: #1c1c1c;
   font-family: 'Roboto', sans-serif;
-  background-image: url('../assets/background6.jpg');
+  background-image: url('../assets/background6.jpg'); /* Add your background image here */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.container {
+.container-pr {
   display: flex;
   flex-direction: row;
   width: 95%;
@@ -29,7 +29,7 @@
   z-index: 1;
 }
 
-.main-content {
+.main-content-pr {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -40,6 +40,12 @@
 
 .carousel-container {
   margin-bottom: 20px;
+}
+
+.carousel-container img {
+  width: 100%;
+  max-height: 250px; /* Adjust the height as needed */
+  object-fit: cover; /* This ensures the image covers the container without distortion */
 }
 
 .top-content {
@@ -60,8 +66,8 @@
   width: 100%;
 }
 
-.room-header {
-  font-size: 28px;
+.room-header-public {
+  font-size: 35px;
   color: #ffffff;
   margin-bottom: 20px;
 }
@@ -140,51 +146,54 @@
   color: #b3b3b3;
 }
 
-.genres-sidebar {
+.genres-sidebar-pr {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 250px;
-  background: rgba(46, 46, 46, 0.3); /* Make the background semi-transparent */
+  background: rgba(119, 119, 119, 0.3); /* Make the background semi-transparent */
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 8px rgba(109, 109, 109, 0.681);
   backdrop-filter: blur(10px); /* Apply backdrop blur for glassmorphism effect */
   -webkit-backdrop-filter: blur(10px); /* Apply backdrop blur for Safari */
   border: 1px solid rgba(255, 255, 255, 0.2); /* Add a light border for glassmorphism effect */
   margin-left: 20px;
 }
 
-.genres-header {
+.genres-header-pr {
   font-size: 24px;
   color: #ffffff;
   margin-bottom: 10px;
 }
 
-.genres-list {
+.genres-list-pr {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.genre-button {
-  background-color: #dcdcdc;
-  padding: 10px 20px;
-  border-radius: 5px;
+.genre-button-pr {
+  background-color: #777777; /* A medium grey color */
+  padding: 25px 30px; /* Increase padding for larger buttons */
+  border-radius: 10px; /* More rounded corners for a smoother look */
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  font-size: 16px;
+  font-size: 18px; /* Larger font size */
   border: none;
   text-align: center;
-  color: #1c1c1c;
+  color: #ffffff; /* White text for better contrast */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
 }
 
-.genre-button:hover {
-  background-color: #bfbfbf;
+.genre-button-pr:hover {
+  background-color: #555555; /* Darker grey on hover */
+  transform: translateY(-2px); /* Lift the button slightly on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
 }
 
 .bg-green-600 {
-  background-color: #0c0c0c !important;
+  background-color: #00000058 !important;
   color: #ffffff;
 }
 
@@ -193,11 +202,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2c2c2c;
+  background-color: #545454;
   padding: 20px;
   border-radius: 10px;
   width: 300px;
   max-width: 80%;
+  z-index: 1000; /* Add a higher z-index for the modal */
 }
 
 .modal-overlay {
@@ -207,15 +217,9 @@
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 999; /* Add a high z-index for the overlay, slightly lower than the modal */
 }
 
 .volume-control {
   width: 100%;
-}
-/* Add other existing styles here */
-
-.carousel-container img {
-  width: 100%;
-  max-height: 250px; /* Adjust the height as needed */
-  object-fit: cover; /* This ensures the image covers the container without distortion */
 }
