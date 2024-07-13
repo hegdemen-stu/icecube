@@ -22,6 +22,12 @@ html, body, #root {
   flex-grow: 1;
 }
 
+.empty-container {
+  width: 200px; /* Adjust as needed */
+  background-color: transparent; /* Can change to a color for visibility if needed */
+  border: 1px solid #ccc; /* Temporary border for visibility */
+}
+
 .generated-room .main-content {
   flex: 1;
   max-width: 60%;
@@ -34,14 +40,96 @@ html, body, #root {
   margin-top: 30px;
 }
 
+.music-player {
+  display: flex;
+  width: 100%;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.room-container {
+  flex: 1;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.room-header {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.current-playing {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.controls-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.control-button {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.control-button:hover {
+  background-color: #777;
+}
+
+.genres-sidebar {
+  width: 150px;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.genres-header {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.genres-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.genre-button {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.genre-button:hover {
+  background-color: #666;
+}
+
+.genre-button.bg-green-600 {
+  background-color: #32a852;
+}
+
 .generated-room .chat-container {
-  max-width: 400px;
   margin-left: 20px;
-  margin-top: 60px; /* Add this line to bring the chat container down */
+  margin-top: 60px;
 }
 
 .generated-room .chat-box-container {
-  height: calc(100vh - 200px); /* Adjusted to account for the new top margin */
+  height: 100%;
   background-color: rgba(116, 116, 116, 0.24);
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -49,7 +137,7 @@ html, body, #root {
 }
 
 .generated-room .chat-box {
-  height: 98%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -84,7 +172,7 @@ html, body, #root {
     width: 100%;
     max-width: none;
     margin-left: 0;
-    margin-top: 20px; /* Adjust for smaller screens */
+    margin-top: 20px;
   }
 
   .generated-room .chat-box-container {
@@ -99,4 +187,46 @@ html, body, #root {
   .room-info p {
     margin-bottom: 5px;
   }
+
+  .genres-sidebar {
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 0;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .genres-list {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .genre-button {
+    margin-right: 10px;
+    flex: 1;
+    text-align: center;
+  }
+}
+
+.react-resizable {
+  position: relative;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  bottom: 0;
+  right: 0;
+  background-color: #ccc;
+  cursor: se-resize;
+}
+.empty-container {
+  width: 200px; /* Adjust as needed */
+  background-color: transparent; /* Can change to a color for visibility if needed */
+  border: 1px solid #ccc; /* Temporary border for visibility */
+  border-radius: 8px;
+  padding: 20px;
+  margin-right: 20px; /* Adjust margin as needed */
 }
