@@ -27,8 +27,23 @@ const PublicRoom = () => {
   const [currentGenre, setCurrentGenre] = useState('POP');
   const [volume, setVolume] = useState(0.5);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('Music'); // New state for active tab
   const audioRef = useRef(null);
   const [songs, setSongs] = useState([]);
+  const [activeLiveTab, setActiveLiveTab] = useState('YouTube'); // State to track active live music tab
+  const [activeGenre, setActiveGenre] = useState('Pop');
+
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName); // Update active tab when clicked
+  };
+
+  const handleLiveTabClick = (tabName) => {
+    setActiveLiveTab(tabName); // Update active live music tab when clicked
+  };
+
+  const handleGenreClick = (genre) => {
+    setActiveGenre(genre); // Update active genre when clicked
+  };
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -162,66 +177,156 @@ const PublicRoom = () => {
 
   return (
     <div className="page-body">
-      <div className="container-pr">
-        <div className="main-content-pr">
-          <div className="carousel-container">
-            <Carousel showThumbs={false} autoPlay interval={3000} infiniteLoop>
-              <div>
-                <img src={Carousel1} alt="Carousel Image 1" />
-              </div>
-              <div>
-                <img src={Carousel2} alt="Carousel Image 2" />
-              </div>
-              <div>
-                <img src={Carousel3} alt="Carousel Image 3" />
-              </div>
-              <div>
-                <img src={Carousel4} alt="Carousel Image 4" />
-              </div>
-              <div>
-                <img src={Carousel5} alt="Carousel Image 5" />
-              </div>
-              <div>
-                <img src={Carousel6} alt="Carousel Image 6" />
-              </div>
-              <div>
-                <img src={Carousel7} alt="Carousel Image 7" />
-              </div>
-            </Carousel>
-          </div>
-          <div className="top-content">
-            <div className="room-container">
-              <h2 className="room-header-public">Tune in and Relax!</h2>
-              <div className="current-playing">
-                Now Playing: {songs[currentSongIndex]?.name || 'No song available'} - {songs[currentSongIndex]?.artist || 'Unknown artist'}
-              </div>
-              <audio ref={audioRef} src={songs[currentSongIndex]?.url} />
-              <div className="controls-container">
-                <button className="control-button" onClick={playPreviousSong}><FaStepBackward /></button>
-                <button className="control-button" onClick={togglePlayPause}>
-                  {isPlaying ? <FaPause /> : <FaPlay />}
-                </button>
-                <button className="control-button" onClick={playNextSong}><FaStepForward /></button>
-                <button className="control-button" onClick={handleOtherOptions}><FaCog /></button>
+      <div className="tab-navigation">
+        <button
+          className={`tab-button ${activeTab === 'Music' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Music')}
+        >
+          Music
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'Live Music' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Live Music')}
+        >
+          Live Music
+        </button>
+      </div>
+      
+      {activeTab === 'Music' && (
+        <div className="container-pr">
+          <div className="main-content-pr">
+            <div className="carousel-container">
+              <Carousel showThumbs={false} autoPlay interval={3000} infiniteLoop>
+                <div>
+                  <img src={Carousel1} alt="Carousel Image 1" />
+                </div>
+                <div>
+                  <img src={Carousel2} alt="Carousel Image 2" />
+                </div>
+                <div>
+                  <img src={Carousel3} alt="Carousel Image 3" />
+                </div>
+                <div>
+                  <img src={Carousel4} alt="Carousel Image 4" />
+                </div>
+                <div>
+                  <img src={Carousel5} alt="Carousel Image 5" />
+                </div>
+                <div>
+                  <img src={Carousel6} alt="Carousel Image 6" />
+                </div>
+                <div>
+                  <img src={Carousel7} alt="Carousel Image 7" />
+                </div>
+              </Carousel>
+            </div>
+            <div className="top-content">
+              <div className="room-container">
+                <h2 className="room-header-public">Tune in and Relax!</h2>
+                <div className="current-playing">
+                  Now Playing: {songs[currentSongIndex]?.name || 'No song available'} - {songs[currentSongIndex]?.artist || 'Unknown artist'}
+                </div>
+                <audio ref={audioRef} src={songs[currentSongIndex]?.url} />
+                <div className="controls-container">
+                  <button className="control-button" onClick={playPreviousSong}><FaStepBackward /></button>
+                  <button className="control-button" onClick={togglePlayPause}>
+                    {isPlaying ? <FaPause /> : <FaPlay />}
+                  </button>
+                  <button className="control-button" onClick={playNextSong}><FaStepForward /></button>
+                  <button className="control-button" onClick={handleOtherOptions}><FaCog /></button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="genres-sidebar-pr">
-          <h2 className="genres-header-pr">Genres</h2>
-          <div className="genres-list-pr">
-            {Object.keys(genres).map((genre) => (
-              <button
-                key={genre}
-                className={`genre-button-pr ${currentGenre === genre ? 'bg-green-600' : ''}`}
-                onClick={() => handleGenreChange({ target: { value: genre } })}
-              >
-                {genre}
-              </button>
-            ))}
+          <div className="genres-sidebar-pr">
+            <h2 className="genres-header-pr">Genres</h2>
+            <div className="genres-list-pr">
+              {Object.keys(genres).map((genre) => (
+                <button
+                  key={genre}
+                  className={`genre-button-pr ${currentGenre === genre ? 'bg-green-600' : ''}`}
+                  onClick={() => handleGenreChange({ target: { value: genre } })}
+                >
+                  {genre}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+{activeTab === 'Live Music' && (
+        <div className="container-pr">
+          <div className="live-music-navbar">
+            <button
+              className={`live-music-tab ${activeLiveTab === 'YouTube' ? 'active' : ''}`}
+              onClick={() => handleLiveTabClick('YouTube')}
+            >
+              Pop
+            </button>
+            <button
+              className={`live-music-tab ${activeLiveTab === 'Arijit' ? 'active' : ''}`}
+              onClick={() => handleLiveTabClick('Arijit')}
+            >
+              Arijit Singh
+            </button>
+            <button
+              className={`live-music-tab ${activeLiveTab === 'old' ? 'active' : ''}`}
+              onClick={() => handleLiveTabClick('old')}
+            >
+             Kishore Kumar
+            </button>
+
+            <button
+              className={`live-music-tab ${activeLiveTab === 'WestClass' ? 'active' : ''}`}
+              onClick={() => handleLiveTabClick('WestClass')}
+            >
+             Western Classical
+            </button>
+
+            <button
+              className={`live-music-tab ${activeLiveTab === 'IndClass' ? 'active' : ''}`}
+              onClick={() => handleLiveTabClick('IndClass')}
+            >
+             Indian Classical
+            </button>
+            {/* Add more buttons for additional live music tabs */}
+          </div>
+
+        
+          
+          {/* Conditional rendering based on activeLiveTab */}
+          {activeLiveTab === 'YouTube' && (
+            <iframe
+              width="0"
+              height="0"
+              src={`https://www.youtube.com/embed/Fl8dkP4YUFw?si=SAi9Hmof-JcNDp-9&controls=0&autoplay=1&disablekb=1&enablejsapi=1`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+            ></iframe>
+          )}
+
+          {activeLiveTab === 'Arijit' && (
+            <iframe width="0" height="0" src="https://www.youtube.com/embed/JarcO0FK3sA?si=CNN4P4U31vMOHIm4&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          )}
+          
+          {activeLiveTab === 'old' && (
+            <iframe width="0" height="0" src="https://www.youtube.com/embed/WOdu3GJs0Ik?si=X8hiR01jg9E4D5Le&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          )}
+
+          {activeLiveTab === 'WestClass' && (
+            <iframe width="0" height="0" src="https://www.youtube.com/embed/ncK2bkjbg9M?si=gwS82XrUj0ne6KaC&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          )}
+
+          {activeLiveTab === 'IndClass' && (
+            <iframe width="0" height="0" src="https://www.youtube.com/embed/JtInj_CXjZM?si=-PxmH1UJxwwxfW7t&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          )}
+        </div>
+      )}
+
+
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
