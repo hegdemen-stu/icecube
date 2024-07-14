@@ -223,3 +223,9 @@
 .volume-control {
   width: 100%;
 }
+
+.container-pr iframe {
+  pointer-events: none;
+  padding-left: 600px;
+}
+
