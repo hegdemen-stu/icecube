@@ -21,6 +21,7 @@
     "react-resizable": "^3.0.5",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.24.1",
+    "react-toastify": "^10.0.5",
     "socket.io-client": "^4.7.5",
     "use-sound": "^4.0.3"
   },

@@ -1,6 +1,4 @@
-/*npm i react-draggable */
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import ChatBox from '../components/ChatBox';
@@ -9,15 +7,26 @@ import backgroundImgs from '../assets/background6.jpg';
 import Draggable from 'react-draggable';
 import Modal from 'react-modal';
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './GeneratedRoom.css';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
+// Define your genres object
 const genres = {
   POP: [],
   Rock: [],
   Melody: [],
   LoFi: [],
   Jazz: [],
+};
+
+// Debounce function
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
 };
 
 const GeneratedRoom = () => {
@@ -35,20 +44,36 @@ const GeneratedRoom = () => {
   const audioRef = useRef(null);
   const [songs, setSongs] = useState([]);
 
+  // Debounced toast function
+  const debouncedToast = useCallback(
+    debounce((message) => toast.success(message), 300),
+    []
+  );
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get('/check-auth', { withCredentials: true });
         if (response.data.isAuthenticated) {
-          setUserId(response.data.user._id);
+          const currentUserId = response.data.user._id;
+          setUserId(currentUserId);
           const newSocket = io('http://localhost:8000', { withCredentials: true });
           setSocket(newSocket);
-
-          newSocket.emit('join room', roomCode, response.data.user._id);
-
-          newSocket.on('user joined', (joinedUsername) => {
-            console.log(`User ${joinedUsername} joined the room`);
+  
+          newSocket.emit('join room', roomCode, currentUserId);
+  
+          newSocket.on('user joined', (joinedUserId, joinedUsername) => {
+            console.log('User joined event received:', { joinedUserId, joinedUsername });
+            if (joinedUserId !== currentUserId) {
+              if (joinedUsername) {
+                debouncedToast(`${joinedUsername} joined the room!`);
+              } else {
+                debouncedToast(`A new user joined the room!`);
+                console.warn('Username not received for joined user:', joinedUserId);
+              }
+            }
           });
+  
 
           newSocket.on('update user count', (count) => {
             setUserCount(count);
@@ -61,6 +86,9 @@ const GeneratedRoom = () => {
           });
 
           return () => {
+            newSocket.off('user joined');
+            newSocket.off('update user count');
+            newSocket.off('error');
             newSocket.disconnect();
           };
         } else {
@@ -73,7 +101,7 @@ const GeneratedRoom = () => {
     };
 
     fetchUserData();
-  }, [roomCode, navigate]);
+  }, [roomCode, navigate, debouncedToast]);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -193,6 +221,14 @@ const GeneratedRoom = () => {
     await fetchSongsByGenre(selectedGenre);
   };
 
+  const handleExit = () => {
+    if (socket) {
+      socket.emit('leave room', roomCode, userId);
+      socket.disconnect();
+    }
+    navigate('/PrivateRoom');
+  };
+
   const handleDrag = (e, ui) => {
     const { x, y } = chatPosition;
     setChatPosition({ x: x + ui.deltaX, y: y + ui.deltaY });
@@ -205,6 +241,13 @@ const GeneratedRoom = () => {
   return (
     <div className='background-room' style={{ backgroundImage: `url(${backgroundImgs})` }}>
       <div className="generated-room">
+        <div className="list-container">
+          <h2>List Container</h2>
+          <div className="list-item">Item 1</div>
+          <div className="list-item">Item 2</div>
+          <div className="list-item">Item 3</div>
+          {/* Add more list items as needed */}
+        </div>
         <div className="main-content">
           <h1>Hi there! Welcome to your private room</h1>
           <div className="music-player">
@@ -248,6 +291,7 @@ const GeneratedRoom = () => {
       <div className="room-info">
         <p>Your room code is: {roomCode}</p>
         <p>Users in room: {userCount}</p>
+        <button className="exit-button" onClick={handleExit}>Exit Room</button>
       </div>
       <Modal
         isOpen={isModalOpen}
@@ -268,6 +312,7 @@ const GeneratedRoom = () => {
         />
         <button onClick={() => setIsModalOpen(false)}>Close</button>
       </Modal>
+      <ToastContainer />
     </div>
   );
 };
