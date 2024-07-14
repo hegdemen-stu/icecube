@@ -54,28 +54,48 @@ conn.once('open', () => {
     console.log('MongoDB connection established successfully');
 });
 
-let gfs;
+let musicGFS;
+let imageGFS;
 
 conn.once('open', () => {
-    const gfs = new GridFSBucket(conn.db, {
-      bucketName: 'musicFiles'
+    musicGFS = new GridFSBucket(conn.db, {
+        bucketName: 'musicFiles'
     });
-  
+
+    imageGFS = new GridFSBucket(conn.db, {
+        bucketName: 'imageFiles'
+    });
+
+    // Routes for music files
     app.get('/songs', async (req, res) => {
-      try {
-          const { genre } = req.query;
-          const query = genre ? { 'metadata.genre': genre } : {};
-          const files = await gfs.find(query).toArray();
-          res.json(files);
-      } catch (error) {
-          res.status(500).json({ error: 'Error fetching songs' });
-      }
-  });
-  
-  
+        try {
+            const { genre } = req.query;
+            const query = genre ? { 'metadata.genre': genre } : {};
+            const files = await musicGFS.find(query).toArray();
+            res.json(files);
+        } catch (error) {
+            res.status(500).json({ error: 'Error fetching songs' });
+        }
+    });
+
     app.get('/stream/:filename', (req, res) => {
-      const readStream = gfs.openDownloadStreamByName(req.params.filename);
-      readStream.pipe(res);
+        const readStream = musicGFS.openDownloadStreamByName(req.params.filename);
+        readStream.pipe(res);
+    });
+
+    // Routes for image files
+    app.get('/images', async (req, res) => {
+        try {
+            const files = await imageGFS.find().toArray();
+            res.json(files);
+        } catch (error) {
+            res.status(500).json({ error: 'Error fetching images' });
+        }
+    });
+
+    app.get('/images/:filename', (req, res) => {
+        const readStream = imageGFS.openDownloadStreamByName(req.params.filename);
+        readStream.pipe(res);
     });
 });
 
@@ -83,75 +103,75 @@ conn.once('open', () => {
 const rooms = new Map();
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
-  let currentRoom = null;
-  let currentUsername = null;
+    console.log('A user connected');
+    let currentRoom = null;
+    let currentUsername = null;
 
-  socket.on('create room', async (roomCode, userId) => {
-    try {
-      const user = await User.findById(userId);
-      if (!user) throw new Error('User not found');
+    socket.on('create room', async (roomCode, userId) => {
+        try {
+            const user = await User.findById(userId);
+            if (!user) throw new Error('User not found');
 
-      currentRoom = roomCode;
-      currentUsername = user.name;
+            currentRoom = roomCode;
+            currentUsername = user.name;
 
-      socket.join(roomCode);
-      if (!rooms.has(roomCode)) {
-        rooms.set(roomCode, new Set([currentUsername]));
-      } else {
-        rooms.get(roomCode).add(currentUsername);
-      }
-      console.log(`Room created: ${roomCode} by ${currentUsername}`);
-      io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
-    } catch (error) {
-      console.error('Error creating room:', error);
-      socket.emit('error', 'Failed to create room');
-    }
-  });
-
-  socket.on('join room', async (roomCode, userId) => {
-    try {
-      const user = await User.findById(userId);
-      if (!user) throw new Error('User not found');
-
-      currentRoom = roomCode;
-      currentUsername = user.name;
-
-      socket.join(roomCode);
-      if (!rooms.has(roomCode)) {
-        rooms.set(roomCode, new Set([currentUsername]));
-      } else {
-        rooms.get(roomCode).add(currentUsername);
-      }
-      console.log(`User ${currentUsername} joined room: ${roomCode}`);
-      io.to(roomCode).emit('user joined', currentUsername);
-      io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
-    } catch (error) {
-      console.error('Error joining room:', error);
-      socket.emit('error', 'Failed to join room');
-    }
-  });
-
-  socket.on('chat message', (msg, roomCode) => {
-    if (currentUsername && currentRoom === roomCode) {
-      io.to(roomCode).emit('chat message', { text: msg, username: currentUsername });
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-    if (currentRoom && currentUsername) {
-      const room = rooms.get(currentRoom);
-      if (room) {
-        room.delete(currentUsername);
-        if (room.size === 0) {
-          rooms.delete(currentRoom);
-        } else {
-          io.to(currentRoom).emit('update user count', room.size);
+            socket.join(roomCode);
+            if (!rooms.has(roomCode)) {
+                rooms.set(roomCode, new Set([currentUsername]));
+            } else {
+                rooms.get(roomCode).add(currentUsername);
+            }
+            console.log(`Room created: ${roomCode} by ${currentUsername}`);
+            io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
+        } catch (error) {
+            console.error('Error creating room:', error);
+            socket.emit('error', 'Failed to create room');
         }
-      }
-    }
-  });
+    });
+
+    socket.on('join room', async (roomCode, userId) => {
+        try {
+            const user = await User.findById(userId);
+            if (!user) throw new Error('User not found');
+
+            currentRoom = roomCode;
+            currentUsername = user.name;
+
+            socket.join(roomCode);
+            if (!rooms.has(roomCode)) {
+                rooms.set(roomCode, new Set([currentUsername]));
+            } else {
+                rooms.get(roomCode).add(currentUsername);
+            }
+            console.log(`User ${currentUsername} joined room: ${roomCode}`);
+            io.to(roomCode).emit('user joined', currentUsername);
+            io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
+        } catch (error) {
+            console.error('Error joining room:', error);
+            socket.emit('error', 'Failed to join room');
+        }
+    });
+
+    socket.on('chat message', (msg, roomCode) => {
+        if (currentUsername && currentRoom === roomCode) {
+            io.to(roomCode).emit('chat message', { text: msg, username: currentUsername });
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+        if (currentRoom && currentUsername) {
+            const room = rooms.get(currentRoom);
+            if (room) {
+                room.delete(currentUsername);
+                if (room.size === 0) {
+                    rooms.delete(currentRoom);
+                } else {
+                    io.to(currentRoom).emit('update user count', room.size);
+                }
+            }
+        }
+    });
 });
 
 const port = 8000;
