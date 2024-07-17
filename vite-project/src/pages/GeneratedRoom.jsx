@@ -14,7 +14,7 @@ import './GeneratedRoom.css';
 const genres = {
   POP: [],
   Rock: [],
-  Melody: [],
+  "R&B": [],
   LoFi: [],
   Jazz: [],
 };
@@ -112,17 +112,19 @@ const GeneratedRoom = () => {
   }, [roomCode, navigate, debouncedToast]);
 
   useEffect(() => {
-    const fetchSongs = async () => {
+    const fetchSongs = async (genre) => {
       try {
-        const response = await axios.get('http://localhost:8000/songs');
-        console.log('API Response:', response.data);
+        const response = await axios.get('http://localhost:8000/songs', {
+          params: { genre }
+        });
+        console.log('API Response:', response.data); // Log the response data
 
         if (Array.isArray(response.data)) {
           const songsData = response.data.map((song) => ({
-            name: song.metadata.name,
-            artist: song.metadata.artist,
+            name: song.metadata.name, // Update to use name from metadata
+            artist: song.metadata.artist, // Update to use artist from metadata
             url: `http://localhost:8000/stream/${song.filename}`,
-            metadata: song.metadata
+            metadata: song.metadata // Include metadata for genre display
           }));
           setSongs(songsData);
           fetchImages(songsData);
@@ -130,12 +132,13 @@ const GeneratedRoom = () => {
           console.error('Unexpected response format:', response.data);
         }
       } catch (error) {
-        console.error('Error fetching songs:', error.response ? error.response.data : error.message);
+        console.error('Error fetching songs:', error);
       }
     };
 
-    fetchSongs();
-  }, []);
+    fetchSongs(currentGenre);
+  }, [currentGenre]);
+
 
   const fetchImages = async (songsData) => {
     try {
