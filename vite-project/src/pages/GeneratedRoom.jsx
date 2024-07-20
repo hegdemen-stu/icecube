@@ -43,6 +43,25 @@ const GeneratedRoom = () => {
   const [songs, setSongs] = useState([]);
   const [images, setImages] = useState([]);
 
+  useEffect(() => {
+    if (socket) {
+        socket.on('host left', () => {
+            toast.error('Host left the room');
+            navigate('/PrivateRoom');
+        });
+
+        socket.on('error', (errorMessage) => {
+            console.error('Socket error:', errorMessage);
+            toast.error(errorMessage);
+        });
+
+        return () => {
+            socket.off('host left');
+            socket.off('error');
+        };
+    }
+}, [socket, navigate]);
+
   const debouncedToast = useCallback(
     debounce((message) => toast.success(message), 300),
     []
