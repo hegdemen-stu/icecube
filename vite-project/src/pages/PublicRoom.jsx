@@ -297,19 +297,11 @@ const PublicRoom = () => {
           
           {/* Conditional rendering based on activeLiveTab */}
           {activeLiveTab === 'YouTube' && (
-            <iframe
-              width="0"
-              height="0"
-              src={`https://www.youtube.com/embed/Fl8dkP4YUFw?si=SAi9Hmof-JcNDp-9&controls=0&autoplay=1&disablekb=1&enablejsapi=1`}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-            ></iframe>
+            <iframe width="0" height="0" src="https://www.youtube.com/embed/HZmdY3TOtS0?si=a6MqRRf8fx7pc0-3&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           )}
 
           {activeLiveTab === 'Arijit' && (
-            <iframe width="0" height="0" src="https://www.youtube.com/embed/JarcO0FK3sA?si=CNN4P4U31vMOHIm4&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <iframe width="0" height="0" src="https://www.youtube.com/embed/KIYEctl7KHs?si=FwCI1Ya3DWJRpdTg&controls=0&autoplay=1&disablekb=1&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           )}
           
           {activeLiveTab === 'old' && (
