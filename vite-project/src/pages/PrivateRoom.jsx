@@ -1,3 +1,4 @@
+//src/pages/PrivateRoom.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PrivateRoom.css';
@@ -57,11 +58,16 @@ const PrivateRoom = () => {
 
   const handleJoinRoom = () => {
     if (joinCode && userId) {
-      socket.emit('join room', joinCode, userId);
-      navigate(`/PrivateRoom/${joinCode}`);
-    } else {
+      socket.emit('join room', joinCode, userId, (response) => {
+          if (response.error) {
+              toast.error(response.error);
+          } else {
+              navigate(`/PrivateRoom/${joinCode}`);
+          }
+      });
+  } else {
       alert("Please enter a room code and ensure you're logged in");
-    }
+  }
   };
 
   const generateRandomCode = () => {
