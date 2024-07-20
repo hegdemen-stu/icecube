@@ -100,6 +100,7 @@ conn.once('open', () => {
 });
 
 // Handle socket connections
+// Handle socket connections
 const rooms = new Map();
 
 io.on('connection', (socket) => {
@@ -129,26 +130,41 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('join room', async (roomCode, userId) => {
+    socket.on('join room', async (roomCode, userId, callback) => {
         try {
             const user = await User.findById(userId);
             if (!user) throw new Error('User not found');
-
+    
+            if (!rooms.has(roomCode)) {
+                if (typeof callback === 'function') {
+                    callback({ error: 'Enter a valid room code' });
+                }
+                return;
+            }
+    
             currentRoom = roomCode;
             currentUsername = user.name;
-
+    
             socket.join(roomCode);
-            if (!rooms.has(roomCode)) {
+            const roomUsers = rooms.get(roomCode);
+            if (!roomUsers) {
                 rooms.set(roomCode, new Set([currentUsername]));
             } else {
-                rooms.get(roomCode).add(currentUsername);
+                roomUsers.add(currentUsername);
             }
             console.log(`User ${currentUsername} joined room: ${roomCode}`);
             io.to(roomCode).emit('user joined', currentUsername);
             io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
+            
+            if (typeof callback === 'function') {
+                callback({ success: true });
+            }
         } catch (error) {
             console.error('Error joining room:', error);
             socket.emit('error', 'Failed to join room');
+            if (typeof callback === 'function') {
+                callback({ error: 'Failed to join room' });
+            }
         }
     });
 
@@ -173,6 +189,7 @@ io.on('connection', (socket) => {
         }
     });
 });
+
 
 const port = 8000;
 server.listen(port, () => console.log(`Server is running on port ${port}`));
