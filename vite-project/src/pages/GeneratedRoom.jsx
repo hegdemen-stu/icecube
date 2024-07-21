@@ -296,7 +296,7 @@ const GeneratedRoom = () => {
   return (
     <div className='background-room' style={{ backgroundImage: `url(${backgroundImgs})` }}>
       <div className="generated-room">
-        <div className="list-container">
+        <div className="list-container-gr">
           <h2>List Container</h2>
           <div className="list-item">Item 1</div>
           <div className="list-item">Item 2</div>
