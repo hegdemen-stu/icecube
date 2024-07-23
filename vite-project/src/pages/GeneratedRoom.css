@@ -311,6 +311,7 @@ html, body, #root {
   }
 }
 
+/* Additional styling for the list-container-gr */
 .list-container-gr {
   flex: 1;
   margin-top: 150px;

@@ -1,3 +1,5 @@
+// GeneratedRoom.jsx
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -42,25 +44,26 @@ const GeneratedRoom = () => {
   const audioRef = useRef(null);
   const [songs, setSongs] = useState([]);
   const [images, setImages] = useState([]);
+  const [queue, setQueue] = useState([]);
 
   useEffect(() => {
     if (socket) {
-        socket.on('host left', () => {
-            toast.error('Host left the room');
-            navigate('/PrivateRoom');
-        });
+      socket.on('host left', () => {
+        toast.error('Host left the room');
+        navigate('/PrivateRoom');
+      });
 
-        socket.on('error', (errorMessage) => {
-            console.error('Socket error:', errorMessage);
-            toast.error(errorMessage);
-        });
+      socket.on('error', (errorMessage) => {
+        console.error('Socket error:', errorMessage);
+        toast.error(errorMessage);
+      });
 
-        return () => {
-            socket.off('host left');
-            socket.off('error');
-        };
+      return () => {
+        socket.off('host left');
+        socket.off('error');
+      };
     }
-}, [socket, navigate]);
+  }, [socket, navigate]);
 
   const debouncedToast = useCallback(
     debounce((message) => toast.success(message), 300),
@@ -136,14 +139,14 @@ const GeneratedRoom = () => {
         const response = await axios.get('http://localhost:8000/songs', {
           params: { genre }
         });
-        console.log('API Response:', response.data); // Log the response data
+        console.log('API Response:', response.data);
 
         if (Array.isArray(response.data)) {
           const songsData = response.data.map((song) => ({
-            name: song.metadata.name, // Update to use name from metadata
-            artist: song.metadata.artist, // Update to use artist from metadata
+            name: song.metadata.name,
+            artist: song.metadata.artist,
             url: `http://localhost:8000/stream/${song.filename}`,
-            metadata: song.metadata // Include metadata for genre display
+            metadata: song.metadata
           }));
           setSongs(songsData);
           fetchImages(songsData);
@@ -157,7 +160,6 @@ const GeneratedRoom = () => {
 
     fetchSongs(currentGenre);
   }, [currentGenre]);
-
 
   const fetchImages = async (songsData) => {
     try {
@@ -195,11 +197,15 @@ const GeneratedRoom = () => {
   };
 
   const playNextSong = () => {
-    if (songs.length > 0) {
+    if (queue.length > 0) {
+      const nextSong = queue.shift();
+      setQueue([...queue]);
+      setCurrentSongIndex(nextSong.index);
+    } else if (songs.length > 0) {
       const nextIndex = (currentSongIndex + 1) % songs.length;
       setCurrentSongIndex(nextIndex);
-      setIsPlaying(true);
     }
+    setIsPlaying(true);
   };
 
   const playPreviousSong = () => {
@@ -289,6 +295,11 @@ const GeneratedRoom = () => {
     setChatPosition({ x: x + ui.deltaX, y: y + ui.deltaY });
   };
 
+  const addToQueue = (index) => {
+    setQueue([...queue, { index, name: songs[index].name }]);
+    toast.success(`${songs[index].name} added to queue`);
+  };
+
   if (!socket || !userId) {
     return <div>Loading...</div>;
   }
@@ -297,10 +308,32 @@ const GeneratedRoom = () => {
     <div className='background-room' style={{ backgroundImage: `url(${backgroundImgs})` }}>
       <div className="generated-room">
         <div className="list-container-gr">
-          <h2>List Container</h2>
-          <div className="list-item">Item 1</div>
-          <div className="list-item">Item 2</div>
-          <div className="list-item">Item 3</div>
+          <h2>Song List and Queue</h2>
+          <div className="songs-container">
+            <h3>Available Songs</h3>
+            <div className="songs-list">
+              {songs.map((song, index) => (
+                <div key={song.url} className="list-item">
+                  {song.name}
+                  <button onClick={() => addToQueue(index)}>Add to Queue</button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="queue-container">
+            <h3>Queue</h3>
+            <div className="queue-list">
+              {queue.length > 0 ? (
+                queue.map((item, index) => (
+                  <div key={index} className="queue-item">
+                    {item.name}
+                  </div>
+                ))
+              ) : (
+                <p>No songs in queue</p>
+              )}
+            </div>
+          </div>
         </div>
         <div className="main-content">
           <h1>Hi there! Welcome to your private room</h1>
