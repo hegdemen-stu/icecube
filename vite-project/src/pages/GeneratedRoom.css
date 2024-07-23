@@ -1,11 +1,22 @@
-/* Reset styles for HTML, body, and #root */
+/* Base styles */
+:root {
+  --primary-bg: #333;
+  --secondary-bg: rgba(255, 255, 255, 0.15);
+  --text-color: #fff;
+  --accent-color: #777;
+  --hover-color: #555;
+  --border-radius: 8px;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text-color);
 }
 
-/* Styling for the background room */
+/* Layout components */
 .background-room {
   min-height: 100vh;
   width: 100%;
@@ -17,220 +28,188 @@ html, body, #root {
   flex-direction: column;
 }
 
-/* Styling for the generated room layout */
 .generated-room {
   display: flex;
-  flex-direction: row;
-  padding: 2vh 2vw;
+  padding: 2rem;
   flex-grow: 1;
-  position: relative;
-  gap: 2vw;
+  gap: 2rem;
 }
 
-/* Styling for the main content area */
-.generated-room .main-content {
+/* Main content area */
+.main-content {
   flex: 0.55;
   max-width: 45%;
-  padding-right: 2vw;
-  margin-top: 2vh;
-  position: relative;
+  margin-top: 2rem;
 }
 
-/* Styling for the main content heading */
-.generated-room .main-content h1 {
+.main-content h1 {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
-  margin-bottom: 2vh;
+  margin-bottom: 2rem;
   margin-top: 10vh;
-  white-space: normal;
 }
 
-/* Styling for the music player */
+/* Music player */
 .music-player {
   display: flex;
   width: 90%;
   justify-content: space-between;
-  margin: 3vh auto 0;
+  margin: 3rem auto 0;
 }
 
-/* Styling for the room container */
 .room-container {
   flex: 0.8;
-  background-color: #333;
-  padding: 1.5vh 1.5vw;
-  border-radius: 8px;
+  background-color: var(--primary-bg);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
   overflow: auto;
   max-width: 80%;
   margin: 0 auto;
 }
 
-/* Styling for the room header */
 .room-header {
   font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  margin-bottom: 1vh;
-  color: #fff;
+  margin-bottom: 1rem;
 }
 
-/* Styling for the currently playing music */
 .current-playing {
   font-size: clamp(0.8rem, 1.8vw, 1.1rem);
-  margin-bottom: 1vh;
-  color: #fff;
+  margin-bottom: 1rem;
 }
 
-/* Styling for the controls container */
+/* Controls */
 .controls-container {
   display: flex;
   justify-content: center;
-  margin-top: 1vh;
+  margin-top: 1rem;
 }
 
-/* Styling for control buttons */
 .control-button {
-  background-color: #555;
-  color: #fff;
+  background-color: var(--accent-color);
+  color: var(--text-color);
   border: none;
-  padding: 0.8vh 0.8vw;
+  padding: 0.8rem;
   font-size: clamp(0.7rem, 1.8vw, 1.1rem);
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin: 0 0.4vw;
+  margin: 0 0.4rem;
 }
 
 .control-button:hover {
-  background-color: #777;
+  background-color: var(--hover-color);
 }
 
-/* Styling for the genres sidebar */
+/* Genres sidebar */
 .genres-sidebar {
   width: 15%;
-  background-color: #4a46464d;
-  padding: 1vh 1vw;
-  border-radius: 8px;
+  background-color: rgba(74, 70, 70, 0.3);
+  padding: 1rem;
+  border-radius: var(--border-radius);
   margin-left: 0;
   order: -1;
 }
 
-/* Styling for the genres header */
 .genres-header {
   font-size: clamp(1.2rem, 3vw, 1.5rem);
-  color: #ffffff;
-  margin-bottom: 1vh;
+  margin-bottom: 1rem;
 }
 
-/* Styling for the genres list */
 .genres-list {
   display: flex;
   flex-direction: column;
-  gap: 1vh;
+  gap: 1rem;
 }
 
-/* Styling for genre buttons */
 .genre-button {
-  background-color: #777;
-  padding: 1.5vh 2vw;
+  background-color: var(--accent-color);
+  padding: 1.5rem 2rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: all 0.3s ease;
   font-size: clamp(0.8rem, 1.5vw, 1rem);
   border: none;
   text-align: center;
-  color: #ffffff;
+  color: var(--text-color);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .genre-button:hover {
-  background-color: #555;
+  background-color: var(--hover-color);
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Styling for the green background */
-.bg-green-600 {
-  background-color: #00000058 !important;
-  color: #ffffff;
-}
-
-/* Styling for the chat container */
-.generated-room .chat-container {
+/* Chat container */
+.chat-container {
   position: absolute;
   top: 0;
   right: 0;
   width: 30%;
   height: 80vh;
-  margin-top: 2vh;
+  margin-top: 2rem;
 }
 
-/* Styling for the chat box container */
-.generated-room .chat-box-container {
+.chat-box-container {
   height: 100%;
   background-color: rgba(150, 134, 134, 0.24);
   border: 1px solid #7a6d6d;
   border-radius: 12px;
   overflow-y: auto;
-  overflow-x: hidden;
 }
 
-/* Styling for the chat box */
-.generated-room .chat-box {
+.chat-box {
   height: 100%;
-  padding: 2vh 2vw;
+  padding: 2rem;
   background-color: rgba(116, 116, 116, 0.24);
 }
 
-/* Styling for room information */
+/* Room info */
 .room-info {
-  padding: 1vh 2vw;
-  color: white;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
 
-/* Styling for room info paragraphs */
 .room-info p {
   margin: 0;
   font-size: clamp(0.8rem, 1.5vw, 1rem);
 }
 
-/* Styling for the list container */
+/* List container */
 .list-container {
   flex: 1;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--secondary-bg);
   backdrop-filter: blur(10px);
-  border-radius: 10px;
-  padding: 2vh 2vw;
+  border-radius: var(--border-radius);
+  padding: 2rem;
   overflow-y: auto;
   max-height: 80vh;
   width: 30%;
 }
 
-/* Styling for list container heading */
 .list-container h2 {
   font-size: clamp(1.2rem, 3vw, 1.5rem);
-  color: #fff;
-  margin-bottom: 2vh;
+  margin-bottom: 2rem;
 }
 
-/* Styling for list items */
 .list-item {
-  margin-bottom: 1vh;
-  padding: 1vh 1vw;
+  margin-bottom: 1rem;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #fff;
+  border-radius: var(--border-radius);
 }
 
 .list-item:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Styling for the exit button */
+/* Exit button */
 .exit-button {
   background-color: #ff4d4d;
   color: white;
   border: none;
-  padding: 1vh 2vw;
-  border-radius: 5px;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius);
   cursor: pointer;
   font-size: clamp(0.8rem, 1.5vw, 1rem);
 }
@@ -239,7 +218,7 @@ html, body, #root {
   background-color: #ff3333;
 }
 
-/* Styling for the song image */
+/* Song image */
 .song-image {
   width: 90%;
   max-width: 250px;
@@ -249,7 +228,7 @@ html, body, #root {
 .song-image img {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 /* Modal styles */
@@ -259,33 +238,31 @@ html, body, #root {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
-  padding: 2vh 2vw;
-  border-radius: 8px;
+  padding: 2rem;
+  border-radius: var(--border-radius);
 }
 
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 .volume-control {
   width: 90%;
-  margin: 1vh auto;
+  margin: 1rem auto;
 }
 
-/* Responsive design for smaller screens */
+/* Responsive design */
 @media (max-width: 768px) {
   .generated-room {
     flex-direction: column;
   }
 
-  .generated-room .main-content {
+  .main-content, .genres-sidebar, .chat-container, .list-container {
+    width: 100%;
     max-width: 100%;
-    padding-right: 0;
+    margin-top: 2rem;
   }
 
   .music-player {
@@ -293,33 +270,89 @@ html, body, #root {
   }
 
   .genres-sidebar {
-    width: 100%;
-    margin-top: 2vh;
     order: 0;
   }
 
-  .generated-room .chat-container {
+  .chat-container {
     position: static;
-    width: 100%;
     height: 60vh;
-    margin-top: 2vh;
-  }
-
-  .list-container {
-    width: 100%;
-    max-height: none;
   }
 }
 
-/* Additional styling for the list-container-gr */
+/* List container for songs and queue */
 .list-container-gr {
   flex: 1;
-  margin-top: 150px;
-  max-width: 20%;
-  background: rgba(255, 255, 255, 0.2);
+  max-width: 25%;
+  background: rgba(53, 53, 53, 0.081);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 rgba(28, 28, 28, 0.37);
   border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  overflow: hidden;
+  margin-top: 150px;
+}
+
+.list-container-gr h2, .list-container-gr h3 {
+  margin-bottom: 15px;
+}
+
+.songs-container, .queue-container {
+  overflow: hidden;
+}
+
+.songs-list-window, .queue-list {
+  height: 200px;
+  overflow-y: auto;
+  background: rgba(36, 36, 36, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.songs-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item, .queue-item {
+  background: rgba(140, 140, 140, 0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-item button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.list-item button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Custom scrollbar styles */
+.songs-list-window::-webkit-scrollbar,
+.queue-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.songs-list-window::-webkit-scrollbar-track,
+.queue-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.songs-list-window::-webkit-scrollbar-thumb,
+.queue-list::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
 }

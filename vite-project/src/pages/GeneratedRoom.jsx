@@ -307,39 +307,41 @@ const GeneratedRoom = () => {
   return (
     <div className='background-room' style={{ backgroundImage: `url(${backgroundImgs})` }}>
       <div className="generated-room">
-        <div className="list-container-gr">
-          <h2>Song List and Queue</h2>
-          <div className="songs-container">
-            <h3>Available Songs</h3>
-            <div className="songs-list">
-              {songs.map((song, index) => (
-                <div key={song.url} className="list-item">
-                  {song.name}
-                  <button onClick={() => addToQueue(index)}>Add to Queue</button>
-                </div>
-              ))}
-            </div>
+      <div className="list-container-gr">
+  <h2>Song List and Queue</h2>
+  <div className="songs-container">
+    <h3>Available Songs</h3>
+    <div className="songs-list-window">
+      <div className="songs-list">
+        {songs.map((song, index) => (
+          <div key={song.url} className="list-item">
+            {song.name}
+            <button onClick={() => addToQueue(index)}>Add to Queue</button>
           </div>
-          <div className="queue-container">
-            <h3>Queue</h3>
-            <div className="queue-list">
-              {queue.length > 0 ? (
-                queue.map((item, index) => (
-                  <div key={index} className="queue-item">
-                    {item.name}
-                  </div>
-                ))
-              ) : (
-                <p>No songs in queue</p>
-              )}
-            </div>
+        ))}
+      </div>
+    </div>
+  </div>
+  <div className="queue-container">
+    <h3>Queue</h3>
+    <div className="queue-list">
+      {queue.length > 0 ? (
+        queue.map((item, index) => (
+          <div key={index} className="queue-item">
+            {item.name}
           </div>
-        </div>
+        ))
+      ) : (
+        <p>No songs in queue</p>
+      )}
+    </div>
+  </div>
+</div>
         <div className="main-content">
           <h1>Hi there! Welcome to your private room</h1>
           <div className="music-player">
             <div className="room-container">
-              <h2 className="room-header">PrivateRoom Music Player</h2>
+              <h2 className="room-header">Personalised Player!</h2>
               <div className="current-playing">
                 Now Playing: {songs[currentSongIndex]?.name || 'No song available'} - {songs[currentSongIndex]?.artist || 'Unknown artist'}
               </div>
