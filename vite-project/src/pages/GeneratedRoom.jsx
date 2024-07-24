@@ -1,5 +1,3 @@
-// GeneratedRoom.jsx
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -282,12 +280,18 @@ const GeneratedRoom = () => {
     await fetchSongsByGenre(selectedGenre);
   };
 
-  const handleExit = () => {
+  const handleExit = async () => {
     if (socket) {
       socket.emit('leave room', roomCode, userId);
       socket.disconnect();
     }
-    navigate('/PrivateRoom');
+    try {
+      await axios.post('/exitPrivateRoom', {}, { withCredentials: true });
+      navigate('/PrivateRoom');
+    } catch (error) {
+      console.error('Error exiting room:', error);
+      toast.error('Failed to exit room. Please try again.');
+    }
   };
 
   const handleDrag = (e, ui) => {
