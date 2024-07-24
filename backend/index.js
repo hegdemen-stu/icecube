@@ -99,6 +99,36 @@ conn.once('open', () => {
     });
 });
 
+const checkAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      return next();
+    } else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  };
+  
+  app.post('/api/update-host-status', checkAuth, async (req, res) => {
+    const { userId, hostStatus } = req.body;
+    try {
+      await User.findByIdAndUpdate(userId, { host: hostStatus });
+      res.status(200).json({ message: 'Host status updated successfully' });
+    } catch (error) {
+      console.error('Error updating host status:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+  app.post('/exitPrivateRoom', checkAuth, async (req, res) => {
+    try {
+      const userId = req.user._id;
+      await User.findByIdAndUpdate(userId, { host: false });
+      res.status(200).json({ message: 'Host status updated successfully' });
+    } catch (error) {
+      console.error('Error updating host status:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
 // Handle socket connections
 // Handle socket connections
 const rooms = new Map();
