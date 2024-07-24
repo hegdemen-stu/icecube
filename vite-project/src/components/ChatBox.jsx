@@ -11,11 +11,17 @@ const ChatBox = ({ socket, roomCode, userId }) => {
   const emojiPickerRef = useRef(null);
 
   useEffect(() => {
+    if (!socket) return;
+
     socket.on('chat message', (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
 
-    return () => socket.off('chat message');
+    return () => {
+      if (socket) {
+        socket.off('chat message');
+      }
+    };
   }, [socket]);
 
   useEffect(() => {
