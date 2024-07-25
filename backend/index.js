@@ -177,11 +177,13 @@ io.on('connection', (socket) => {
     
             socket.join(roomCode);
             const roomUsers = rooms.get(roomCode);
+            let isHost = false;
             if (!roomUsers) {
-                rooms.set(roomCode, new Set([currentUsername]));
+            rooms.set(roomCode, new Set([currentUsername]));
+            isHost = true; // First user to join becomes the host
             } else {
-                roomUsers.add(currentUsername);
-            }
+            roomUsers.add(currentUsername);
+        }
             console.log(`User ${currentUsername} joined room: ${roomCode}`);
             io.to(roomCode).emit('user joined', currentUsername);
             io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
@@ -189,6 +191,7 @@ io.on('connection', (socket) => {
             if (typeof callback === 'function') {
                 callback({ success: true });
             }
+            socket.emit('host status', isHost);
         } catch (error) {
             console.error('Error joining room:', error);
             socket.emit('error', 'Failed to join room');
@@ -197,6 +200,30 @@ io.on('connection', (socket) => {
             }
         }
     });
+
+    socket.on('add to queue', (roomCode, songData) => {
+        socket.to(roomCode).emit('queue updated', songData);
+      });
+    
+    socket.on('song played from queue', (roomCode, updatedQueue) => {
+        socket.to(roomCode).emit('update queue', updatedQueue);
+      });
+
+    socket.on('play', (roomCode, songIndex) => {
+        socket.to(roomCode).emit('play', songIndex);
+      });
+    
+    socket.on('pause', (roomCode) => {
+        socket.to(roomCode).emit('pause');
+      });
+    
+    socket.on('next song', (roomCode, songIndex) => {
+        socket.to(roomCode).emit('next song', songIndex);
+      });
+    
+    socket.on('previous song', (roomCode, songIndex) => {
+        socket.to(roomCode).emit('previous song', songIndex);
+      });
 
     socket.on('chat message', (msg, roomCode) => {
         if (currentUsername && currentRoom === roomCode) {
