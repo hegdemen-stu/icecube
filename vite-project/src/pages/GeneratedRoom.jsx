@@ -1,5 +1,3 @@
-// GeneratedRoom.jsx
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -12,6 +10,11 @@ import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaCog } from 'react-ico
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './GeneratedRoom.css';
+
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8000',
+  timeout: 30000, // 30 seconds timeout
+});
 
 const genres = {
   POP: [],
@@ -45,6 +48,7 @@ const GeneratedRoom = () => {
   const [songs, setSongs] = useState([]);
   const [images, setImages] = useState([]);
   const [queue, setQueue] = useState([]);
+  const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     if (socket) {
@@ -71,6 +75,70 @@ const GeneratedRoom = () => {
   );
 
   useEffect(() => {
+    if (socket) {
+      socket.on('queue updated', (songData) => {
+        setQueue(prevQueue => [...prevQueue, songData]);
+        toast.info(`${songData.name} added to queue by another user`);
+      });
+  
+      return () => {
+        socket.off('queue updated');
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('update queue', (updatedQueue) => {
+        setQueue(updatedQueue);
+      });
+  
+      return () => {
+        socket.off('update queue');
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('play', (songIndex, time) => {
+        setCurrentSongIndex(songIndex);
+        setCurrentTime(time);
+        setIsPlaying(true);
+        if (audioRef.current) {
+          audioRef.current.currentTime = time;
+          audioRef.current.play().catch(error => console.error('Error playing audio:', error));
+        }
+      });
+  
+      socket.on('pause', (time) => {
+      setIsPlaying(false);
+      setCurrentTime(time);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    });
+  
+      socket.on('next song', (songIndex) => {
+        setCurrentSongIndex(songIndex);
+        setIsPlaying(true);
+      });
+  
+      socket.on('previous song', (songIndex) => {
+        setCurrentSongIndex(songIndex);
+        setIsPlaying(true);
+      });
+  
+      return () => {
+        socket.off('play');
+        socket.off('pause');
+        socket.off('next song');
+        socket.off('previous song');
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get('/check-auth', { withCredentials: true });
@@ -78,6 +146,7 @@ const GeneratedRoom = () => {
         if (response.data.isAuthenticated) {
           const currentUserId = response.data.user._id;
           setUserId(currentUserId);
+          setIsHost(response.data.user.host);
           const newSocket = io('http://localhost:8000', { withCredentials: true });
           console.log('Socket created:', newSocket);
           
@@ -135,29 +204,42 @@ const GeneratedRoom = () => {
 
   useEffect(() => {
     const fetchSongs = async (genre) => {
-      try {
-        const response = await axios.get('http://localhost:8000/songs', {
-          params: { genre }
-        });
-        console.log('API Response:', response.data);
-
-        if (Array.isArray(response.data)) {
-          const songsData = response.data.map((song) => ({
-            name: song.metadata.name,
-            artist: song.metadata.artist,
-            url: `http://localhost:8000/stream/${song.filename}`,
-            metadata: song.metadata
-          }));
-          setSongs(songsData);
-          fetchImages(songsData);
-        } else {
-          console.error('Unexpected response format:', response.data);
+      const loadSongs = async () => {
+        try {
+          const response = await axiosInstance.get('/songs', {
+            params: { genre }
+          });
+          console.log('API Response:', response.data);
+    
+          if (Array.isArray(response.data)) {
+            const songsData = response.data.map((song) => ({
+              name: song.metadata.name,
+              artist: song.metadata.artist,
+              url: `http://localhost:8000/stream/${song.filename}`,
+              metadata: song.metadata
+            }));
+            setSongs(songsData);
+            fetchImages(songsData);
+          } else {
+            console.error('Unexpected response format:', response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching songs:', error);
         }
-      } catch (error) {
-        console.error('Error fetching songs:', error);
+      };
+    
+      if (document.hidden) {
+        const handleVisibilityChange = () => {
+          if (!document.hidden) {
+            loadSongs();
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+          }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+      } else {
+        await loadSongs();
       }
     };
-
     fetchSongs(currentGenre);
   }, [currentGenre]);
 
@@ -188,51 +270,76 @@ const GeneratedRoom = () => {
   };
 
   const togglePlayPause = () => {
+    if (!isHost) {
+      toast.error('Only the host can play/pause the music.');
+      return;
+    }
     if (!isPlaying && songs[currentSongIndex]) {
       audioRef.current.play();
+      setIsPlaying(true);
+      socket.emit('play', roomCode, currentSongIndex);
     } else {
       audioRef.current.pause();
+      setIsPlaying(false);
+      socket.emit('pause', roomCode);
     }
-    setIsPlaying(!isPlaying);
   };
 
   const playNextSong = () => {
-    if (queue.length > 0) {
-      const nextSong = queue.shift();
-      setQueue([...queue]);
-      setCurrentSongIndex(nextSong.index);
-    } else if (songs.length > 0) {
-      const nextIndex = (currentSongIndex + 1) % songs.length;
-      setCurrentSongIndex(nextIndex);
+    if (!isHost) {
+      toast.error('Only the host can change the song.');
+      return;
     }
+    let nextIndex;
+    let updatedQueue = [...queue];
+    if (updatedQueue.length > 0) {
+      const nextSong = updatedQueue.shift();
+      nextIndex = nextSong.index;
+    } else if (songs.length > 0) {
+      nextIndex = (currentSongIndex + 1) % songs.length;
+    }
+    setCurrentSongIndex(nextIndex);
+    setQueue(updatedQueue);
     setIsPlaying(true);
+    socket.emit('next song', roomCode, nextIndex);
+    socket.emit('song played from queue', roomCode, updatedQueue);
   };
 
   const playPreviousSong = () => {
+    if (!isHost) {
+      toast.error('Only the host can change the song.');
+      return;
+    }
     if (songs.length > 0) {
       const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
       setCurrentSongIndex(prevIndex);
       setIsPlaying(true);
+      socket.emit('previous song', roomCode, prevIndex);
     }
   };
 
   const handleOtherOptions = () => {
+    if (!isHost) {
+      toast.error('Only the host can change the song.');
+      return;
+    }
     setIsModalOpen(true);
   };
 
   useEffect(() => {
     const audio = audioRef.current;
     if (audio && songs.length > 0) {
+      audio.src = songs[currentSongIndex].url;
       if (isPlaying) {
         audio.play().catch(error => console.error('Error playing audio:', error));
       } else {
         audio.pause();
       }
-
+  
       const handleEnded = () => {
         playNextSong();
       };
-
+  
       audio.addEventListener('ended', handleEnded);
       return () => {
         audio.removeEventListener('ended', handleEnded);
@@ -282,12 +389,18 @@ const GeneratedRoom = () => {
     await fetchSongsByGenre(selectedGenre);
   };
 
-  const handleExit = () => {
+  const handleExit = async () => {
     if (socket) {
       socket.emit('leave room', roomCode, userId);
       socket.disconnect();
     }
-    navigate('/PrivateRoom');
+    try {
+      await axios.post('/exitPrivateRoom', {}, { withCredentials: true });
+      navigate('/PrivateRoom');
+    } catch (error) {
+      console.error('Error exiting room:', error);
+      toast.error('Failed to exit room. Please try again.');
+    }
   };
 
   const handleDrag = (e, ui) => {
@@ -296,14 +409,15 @@ const GeneratedRoom = () => {
   };
 
   const addToQueue = (index) => {
-    setQueue([...queue, { index, name: songs[index].name }]);
+    const songData = { index, name: songs[index].name };
+    setQueue([...queue, songData]);
+    socket.emit('add to queue', roomCode, songData);
     toast.success(`${songs[index].name} added to queue`);
   };
 
   if (!socket || !userId) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className='background-room' style={{ backgroundImage: `url(${backgroundImgs})` }}>
       <div className="generated-room">

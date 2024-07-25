@@ -99,6 +99,36 @@ conn.once('open', () => {
     });
 });
 
+const checkAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      return next();
+    } else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  };
+  
+  app.post('/api/update-host-status', checkAuth, async (req, res) => {
+    const { userId, hostStatus } = req.body;
+    try {
+      await User.findByIdAndUpdate(userId, { host: hostStatus });
+      res.status(200).json({ message: 'Host status updated successfully' });
+    } catch (error) {
+      console.error('Error updating host status:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+  app.post('/exitPrivateRoom', checkAuth, async (req, res) => {
+    try {
+      const userId = req.user._id;
+      await User.findByIdAndUpdate(userId, { host: false });
+      res.status(200).json({ message: 'Host status updated successfully' });
+    } catch (error) {
+      console.error('Error updating host status:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
 // Handle socket connections
 // Handle socket connections
 const rooms = new Map();
@@ -147,11 +177,13 @@ io.on('connection', (socket) => {
     
             socket.join(roomCode);
             const roomUsers = rooms.get(roomCode);
+            let isHost = false;
             if (!roomUsers) {
-                rooms.set(roomCode, new Set([currentUsername]));
+            rooms.set(roomCode, new Set([currentUsername]));
+            isHost = true; // First user to join becomes the host
             } else {
-                roomUsers.add(currentUsername);
-            }
+            roomUsers.add(currentUsername);
+        }
             console.log(`User ${currentUsername} joined room: ${roomCode}`);
             io.to(roomCode).emit('user joined', currentUsername);
             io.to(roomCode).emit('update user count', rooms.get(roomCode).size);
@@ -159,6 +191,7 @@ io.on('connection', (socket) => {
             if (typeof callback === 'function') {
                 callback({ success: true });
             }
+            socket.emit('host status', isHost);
         } catch (error) {
             console.error('Error joining room:', error);
             socket.emit('error', 'Failed to join room');
@@ -167,6 +200,30 @@ io.on('connection', (socket) => {
             }
         }
     });
+
+    socket.on('add to queue', (roomCode, songData) => {
+        socket.to(roomCode).emit('queue updated', songData);
+      });
+    
+    socket.on('song played from queue', (roomCode, updatedQueue) => {
+        socket.to(roomCode).emit('update queue', updatedQueue);
+      });
+
+    socket.on('play', (roomCode, songIndex) => {
+        socket.to(roomCode).emit('play', songIndex);
+      });
+    
+    socket.on('pause', (roomCode) => {
+        socket.to(roomCode).emit('pause');
+      });
+    
+    socket.on('next song', (roomCode, songIndex) => {
+        socket.to(roomCode).emit('next song', songIndex);
+      });
+    
+    socket.on('previous song', (roomCode, songIndex) => {
+        socket.to(roomCode).emit('previous song', songIndex);
+      });
 
     socket.on('chat message', (msg, roomCode) => {
         if (currentUsername && currentRoom === roomCode) {
